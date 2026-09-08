@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 Phase: 1 of 6 (Seeded, Governed, Servable Foundation)
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-09-08 — Express wave 3 complete: F9 workflow state machine + F3 six-route HTTP API on 0.0.0.0:3000 (134 tests green)
+Last activity: 2026-09-08 — Express wave 4 complete: F17 Cargo Exception Queue + F18 Shipment Review React/Vite SPA served by the wave-3 API on 0.0.0.0:3000 (134 vitest + 27 Playwright green)
 
 Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3 (express)
+- Total plans completed: 4 (express)
 - Average duration: ~15 min
-- Total execution time: 0.7 hours
+- Total execution time: 1.0 hours
 
 **By Phase:**
 
@@ -30,6 +30,7 @@ Progress: [░░░░░░░░░░] 0%
 | express-wave-1 | 1 | 9 min | 9 min |
 | express-wave-2 | 1 | 14 min | 14 min |
 | express-wave-3 | 1 | 21 min | 21 min |
+| express-wave-4 | 1 | 16 min | 16 min |
 
 **Recent Trend:**
 - Last 5 plans: —
@@ -57,6 +58,9 @@ Recent decisions affecting current work:
 - [Wave 3]: Role dimension collapsed (access control out of scope) — every action attributed to usr-cs-001; PENDING_APPROVAL is seed-only inbound with its outbound rows permitted.
 - [Wave 3]: Exactly one cases.status writer (workflowRepository.applyTransition), reachable only from executeAction; asserted by a source-walk test.
 - [Wave 3]: Fastify ajv removeAdditional:false + queueService allow-list, because Fastify silently strips unknown querystring props; unknown param -> 422 INVALID_QUERY_PARAM.
+- [Wave 4]: Client routes diverge from the mockups on purpose — queue at `/` (landing), review at `/shipments/:shipmentId` — because the application shell is deferred; the queue must be the root to be reachable without typing a URL.
+- [Wave 4]: URL-restored QueueQuery params are forwarded to the server verbatim (never intersected with the frozen enums); the server is the sole validator, a 422 renders queue-error, not unfiltered data.
+- [Wave 4]: The one UI-reachable action rejection is CASE_VERSION_CONFLICT (the panel disables unavailable actions), proven in cross-screen.spec by staling the held case_version.
 
 ### Pending Todos
 
@@ -70,7 +74,7 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-09-08
-Stopped at: Completed express/cargodemo-cbp-cargo-exception-review-app plan 03 (wave 3, F9 workflow state machine + F3 HTTP API). Commits ca3a8db, 7ad1115, aa66060. See .planning/express/cargodemo-cbp-cargo-exception-review-app/03-SUMMARY.md
+Stopped at: Completed express/cargodemo-cbp-cargo-exception-review-app plan 04 (wave 4, F17 queue + F18 review React/Vite SPA). Commits 5de9636, a5088b0, 61d4018. See .planning/express/cargodemo-cbp-cargo-exception-review-app/04-SUMMARY.md
 Resume file: None
 
 ### Express task progress
@@ -78,3 +82,4 @@ Resume file: None
 - express/cargodemo-cbp-cargo-exception-review-app plan 01 (wave 1, database): COMPLETE — 21-table schema, F0 migrations/self-check, F2 12-shipment idempotent seed, typed repository contract published at src/infra/db. 24 integration tests green.
 - express/cargodemo-cbp-cargo-exception-review-app plan 02 (wave 2, rules+detection): COMPLETE — F4 pure config-driven rule engine (three evaluators, closed map, Ajv, fingerprint), F5 one-transaction detection with write-time evidence gates + derived priority + queue projection, seed hook populates 12 evaluations / 15 exceptions / 33 evidence on migrate+seed. 78 tests green (9 files). detectExceptions/createEvaluateHook/derivePriority + ExceptionRecord projection published for wave 3.
 - express/cargodemo-cbp-cargo-exception-review-app plan 03 (wave 3, workflow+API): COMPLETE — F9 pure state machine (35 transitions as data, four guards, mandatory justification), F3 six-route Fastify API bound 0.0.0.0:3000 with uniform error envelope + iframe-safe headers (no framing header/directive), transactional executeAction as the sole cases.status writer. 134 tests green (15 files). src/shared/api contract published for wave 4; CLEAR_EXCEPTION records acting user as approving official (two-person approval deferred). Fastify + @fastify/static added.
+- express/cargodemo-cbp-cargo-exception-review-app plan 04 (wave 4, frontend): COMPLETE — F17 Cargo Exception Queue at `/` (server-side filter/sort, multi-exception chips, keyboard+pointer row nav, three empty/error states, URL-persisted query) + F18 Shipment Review at `/shipments/:shipmentId` (entry data, documents-as-absence, per-exception rule/authority/assertion/evidence, five-action panel gated on a mandatory human justification with server-advertised min, confirmation quoting justification in the human band, request_id error surfacing). React 18 + Vite 5 + React Router 6 + TanStack Query 5, CSS Modules; builds to dist/client, served same-origin by the wave-3 API on 0.0.0.0:3000. Client imports only src/shared/api. 27 Playwright tests (4 spec files; only cross-screen mutates state, on SHP-2026-0001) + 134 vitest still green. Application shell/nav/role switcher, AI/recommendation, upload, revalidate, audit, approval chain all deferred and unrendered.
