@@ -1,0 +1,1111 @@
+{
+  "config": {
+    "argv": [
+      "/usr/local/bin/node",
+      "/home/daytona/project/node_modules/.bin/playwright",
+      "test",
+      "e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "/home/daytona/project/playwright.config.ts",
+    "rootDir": "/home/daytona/project/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/daytona/project/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/daytona/project/e2e",
+        "testIgnore": [
+          "**/journey/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "rm -rf ./data/e2e.db ./data/e2e.db-wal ./data/e2e.db-shm && npm run build:client && npm start",
+      "url": "http://127.0.0.1:3000/api/queue",
+      "env": {
+        "CARGODEMO_DB_PATH": "./data/e2e.db",
+        "CARGODEMO_SEED_ON_EMPTY": "true"
+      },
+      "reuseExistingServer": false,
+      "timeout": 180000
+    }
+  },
+  "suites": [
+    {
+      "title": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+      "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "1. Primary user flow — JRN-01.1 (flag → review → act)",
+          "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+          "line": 37,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "US-9.2 Work a Queue of Flagged Shipments",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 42,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "opens the Cargo Exception Queue and sees flagged shipments in a table",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                            "line": 37,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 117,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:15.237Z",
+                          "annotations": [
+                            {
+                              "type": "serial",
+                              "location": {
+                                "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                                "line": 37,
+                                "column": 6
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-e9b15af59f40987ccf9b",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 43,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-9.4 See Multi-Exception Shipments Without Collapsing",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 71,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "sees SHP-2026-0007 with three distinct exception chips, never \"3 exceptions\"",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                            "line": 37,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 114,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:15.403Z",
+                          "annotations": [
+                            {
+                              "type": "serial",
+                              "location": {
+                                "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                                "line": 37,
+                                "column": 6
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-db5c9104bbc2f7178bb4",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 72,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-9.2 Work a Queue of Flagged Shipments",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 99,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "opens SHP-2026-0007 by activating its row, landing on the Shipment Review screen",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                            "line": 37,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 114,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:15.521Z",
+                          "annotations": [
+                            {
+                              "type": "serial",
+                              "location": {
+                                "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                                "line": 37,
+                                "column": 6
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-75ebf16a310e296acf29",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 100,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-9.5 / US-1.5 See the Whole Case on One Review Screen",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 116,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "reads the entry data and the per-exception validation cards with evidence rows",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                            "line": 37,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 135,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:15.640Z",
+                          "annotations": [
+                            {
+                              "type": "serial",
+                              "location": {
+                                "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                                "line": 37,
+                                "column": 6
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-27615324bfca1a99547e",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 117,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-3.1 Take One of Exactly Five Actions on a Case",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 163,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "selects \"Place on hold\", sees only its fields, and Submit stays disabled until valid",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                            "line": 37,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 207,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:15.778Z",
+                          "annotations": [
+                            {
+                              "type": "serial",
+                              "location": {
+                                "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                                "line": 37,
+                                "column": 6
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-3f05ea9e9c6b2bcbb5dc",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 164,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-3.4 Place a Case on Hold with a Stated Reason",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 202,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "types a valid justification, submits, and sees the confirmation with the new ON_HOLD status",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                            "line": 37,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 203,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:15.989Z",
+                          "annotations": [
+                            {
+                              "type": "serial",
+                              "location": {
+                                "file": "/home/daytona/project/e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                                "line": 37,
+                                "column": 6
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-347a23a1ca1a08e5b8b7",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 203,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "2. Secondary flows",
+          "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+          "line": 250,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "US-9.3 Filter and Sort the Queue Deterministically",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 251,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "status, exception-type and priority filters are all offered",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 79,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:16.196Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-373b7980205c4ae6eb11",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 252,
+                  "column": 5
+                },
+                {
+                  "title": "default priority-desc ordering is deterministic and non-increasing",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 95,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:16.279Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-cd3c7d7a8f6d520ab937",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 261,
+                  "column": 5
+                },
+                {
+                  "title": "an applied filter renders as a removable chip and clearing restores the set",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 175,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:16.378Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-170ff0e2944cd4abc67b",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 277,
+                  "column": 5
+                },
+                {
+                  "title": "empty states distinguish no-match from the default no-flagged view",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 70,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:16.557Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-a3022929d30b363f304b",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 300,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-9.4 See Multi-Exception Shipments Without Collapsing",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 317,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "the clean shipment is off the queue by default and appears when clean entries are included",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 132,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:16.631Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-bfe4a143f0d109241ef7",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 318,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-1.5 See Field-Level Evidence for Every Exception",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 330,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "evidence rows show field references and values, including the origin conflict",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 85,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:16.766Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-02f1b4ac949cec7ae5a7",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 331,
+                  "column": 5
+                },
+                {
+                  "title": "a missing-required-document exception renders its missing-information list",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 99,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:16.856Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-0805df32434bea2dc322",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 347,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-9.5 See the Whole Case on One Review Screen",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 361,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "every action control is enabled or disabled with a visible reason — none hidden",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 111,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:16.958Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-9463ceabe41815bba82a",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 362,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-3.3 Send a Case for Specialist Review",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 387,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "sending a NEW case for specialist review moves it to IN_REVIEW",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 197,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:17.073Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-8336546c66ba41248493",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 388,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-3.5 Escalate a Case and Transfer Authority Upward",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 426,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "escalating a case with an enumerated reason moves it to ESCALATED",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 193,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:17.273Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-690ae9a2cafb06db5da9",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 427,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "3. Technical checks",
+          "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+          "line": 473,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "US-0.4 Start with a Seeded, Deterministic Demo Dataset",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 474,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "the queue is non-empty on a fresh seed",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 20,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:17.470Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-4aef2313c22f59d09915",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 475,
+                  "column": 5
+                },
+                {
+                  "title": "canonical SHP-2026-0007 is present with its three expected exceptions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 21,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:17.494Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-e7dcd1c5121923b5756c",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 483,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-0.1 Persist the Full Cargo Exception Domain",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 502,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "shipment detail and its exceptions are readable via the data path",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 22,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:17.519Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-8f0450670e4e9f9a3d56",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 503,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-9.3 Filter and Sort the Queue Deterministically",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 520,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "a filter value outside the enums is rejected with INVALID_QUERY_PARAM and surfaced in the UI",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1353,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:17.544Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-6cefe5731b5e813e9f9e",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 521,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-9.5 See the Whole Case on One Review Screen",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 537,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "a deep link to /shipments/SHP-2026-0007 renders the review screen",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 77,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:18.902Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-2dd0a12b888428c2f427",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 538,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "US-0.1 Persist the Full Cargo Exception Domain",
+              "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+              "line": 551,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "an unknown /api route returns a JSON error envelope, not the SPA fallback",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 23,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-08T22:39:18.997Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "07dee35ece73aabc650e-9ab4df11b9038dcf43e1",
+                  "file": "uat/cargodemo-cbp-cargo-exception-review-app.spec.ts",
+                  "line": 552,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-08T22:39:12.982Z",
+    "duration": 6074.472,
+    "expected": 22,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

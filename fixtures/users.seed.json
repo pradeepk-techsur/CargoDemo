@@ -1,0 +1,7 @@
+[
+  { "id": "usr-cs-001", "name": "Marisol Reyes", "role": "CARGO_SPECIALIST" },
+  { "id": "usr-cs-002", "name": "Marcus Hale", "role": "CARGO_SPECIALIST" },
+  { "id": "usr-sup-001", "name": "Dwayne Okafor", "role": "SUPERVISOR" },
+  { "id": "usr-sup-002", "name": "Ronald Pike", "role": "SUPERVISOR" },
+  { "id": "usr-adm-001", "name": "Priya Raghavan", "role": "SYSTEM_ADMINISTRATOR" }
+]

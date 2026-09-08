@@ -1,0 +1,206 @@
+/* Cargo Exception Queue styles. Container-relative sizing only. */
+
+.screen {
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: var(--sp-5);
+}
+
+.header {
+  margin-bottom: var(--sp-4);
+}
+
+.resultCount {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+@media (max-width: 1023px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Filters */
+.filters {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-4);
+}
+
+.fieldset {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-3);
+  margin: 0 0 var(--sp-4) 0;
+}
+
+.legend {
+  font-weight: 600;
+  padding: 0 var(--sp-1);
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-1);
+}
+
+.selectRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-3);
+}
+
+.select {
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.appliedFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+
+.appliedChip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px var(--sp-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+  font-size: 0.8125rem;
+}
+
+.removeChip {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0 2px;
+}
+
+.clearAll {
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+/* Table */
+.tableWrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table thead th {
+  text-align: left;
+  padding: var(--sp-3);
+  border-bottom: 2px solid var(--border-strong);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.colShipment {
+  width: 14%;
+}
+.colImporter {
+  width: 20%;
+}
+.colExceptions {
+  width: 26%;
+}
+.colPriority {
+  width: 14%;
+}
+.colStatus {
+  width: 12%;
+}
+.colAge {
+  width: 6%;
+}
+.colValue {
+  width: 12%;
+}
+
+.row {
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.row:hover {
+  background: var(--surface-sunken);
+}
+
+.row td {
+  padding: var(--sp-3);
+  vertical-align: top;
+}
+
+.shipmentId {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.exceptionsCell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.openCount {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  margin-left: var(--sp-1);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  justify-content: flex-end;
+}
+
+.pageButton {
+  padding: var(--sp-1) var(--sp-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.pageButton:disabled {
+  cursor: not-allowed;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
