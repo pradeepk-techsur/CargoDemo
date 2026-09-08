@@ -239,7 +239,17 @@ export function listQueue(
   const where: string[] = [];
   const params: Record<string, unknown> = {};
 
-  if (!q.include_clean) where.push('cs.queued = 1');
+  // The clean filter (zero-exception cases off the queue) applies to non-cleared
+  // cases; a CLEARED case is governed by include_cleared alone, even though its
+  // queued flag is 0. So: exclude clean cases unless include_clean, but never let
+  // the clean rule hide a cleared case the caller asked to see.
+  if (!q.include_clean) {
+    if (q.include_cleared) {
+      where.push("(cs.queued = 1 OR cs.status = 'CLEARED')");
+    } else {
+      where.push('cs.queued = 1');
+    }
+  }
   if (!q.include_cleared) where.push("cs.status <> 'CLEARED'");
 
   if (q.status.length) {

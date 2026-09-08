@@ -32,6 +32,14 @@ import {
   createEvidenceRepository,
   type EvidenceRepository,
 } from './repositories/evidenceRepository.js';
+import {
+  createWorkflowRepository,
+  type WorkflowRepository,
+} from './repositories/workflowRepository.js';
+import {
+  createIdempotencyRepository,
+  type IdempotencyRepository,
+} from './repositories/idempotencyRepository.js';
 
 // --- re-exports --------------------------------------------------------------
 
@@ -50,6 +58,8 @@ export type {
   EvaluationRepository,
   ExceptionRepository,
   EvidenceRepository,
+  WorkflowRepository,
+  IdempotencyRepository,
 };
 export type { CaseProjectionUpdate } from './repositories/caseRepository.js';
 
@@ -62,6 +72,8 @@ export interface Repositories {
   evaluations: EvaluationRepository;
   exceptions: ExceptionRepository;
   evidence: EvidenceRepository;
+  workflow: WorkflowRepository;
+  idempotency: IdempotencyRepository;
 }
 
 /** Build the repository set bound to a database handle. */
@@ -75,6 +87,8 @@ export function repositories(db: Db): Repositories {
     evaluations: createEvaluationRepository(db),
     exceptions: createExceptionRepository(db),
     evidence: createEvidenceRepository(db),
+    workflow: createWorkflowRepository(db),
+    idempotency: createIdempotencyRepository(db),
   };
 }
 

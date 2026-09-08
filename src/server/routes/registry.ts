@@ -1,8 +1,8 @@
 /**
  * The route registry. `ROUTES` is an array of route definition objects and
- * NOTHING else — it contains no `url:` literal of its own, because the
- * end-of-wave inventory gate counts unique `url: '/api/…'` literals under
- * `src/server/routes/`.
+ * NOTHING else — it declares no route path of its own, because the end-of-wave
+ * inventory gate counts unique api path literals under `src/server/routes/` and
+ * a stray one here would inflate the count.
  *
  * Task 2 registers one route (queue); Task 3 appends the other five.
  */
@@ -20,5 +20,7 @@ export interface RouteDefinition {
 export type { FastifyReply, FastifyRequest };
 
 import { queueListRoute } from './queue.js';
+import { shipmentRoutes } from './shipments.js';
+import { caseRoutes } from './cases.js';
 
-export const ROUTES: RouteDefinition[] = [queueListRoute];
+export const ROUTES: RouteDefinition[] = [queueListRoute, ...shipmentRoutes, ...caseRoutes];
