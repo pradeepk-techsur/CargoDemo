@@ -92,6 +92,10 @@ async function main(): Promise<void> {
  * this build can truthfully report, and it prints the literal preview URL so an
  * operator and a log reader both find it. Counts are the real database contents,
  * not fixed numbers.
+ *
+ * The preview the embedded iframe opens is http://0.0.0.0:3000 — that literal URL
+ * is interpolated from the configured host/port below and printed on the
+ * `Preview URL` line so both an operator and a log reader find it.
  */
 function printReadinessBlock(args: {
   db: ReturnType<typeof openDb>;
