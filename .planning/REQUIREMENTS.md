@@ -79,39 +79,51 @@ Recorded decisions from PRD §5.8, not omissions. Nothing here may be silently r
 
 ## Traceability
 
-Populated during roadmap creation.
+Populated during roadmap creation (2026-09-08). Phase definitions live in `.planning/ROADMAP.md`.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| F0 | — | Pending |
-| F1 | — | Pending |
-| F2 | — | Pending |
-| F3 | — | Pending |
-| F4 | — | Pending |
-| F5 | — | Pending |
-| F6 | — | Pending |
-| F7 | — | Pending |
-| F8 | — | Pending |
-| F9 | — | Pending |
-| F10 | — | Pending |
-| F11 | — | Pending |
-| F12 | — | Pending |
-| F13 | — | Pending |
-| F14 | — | Pending |
-| F15 | — | Pending |
-| F16 | — | Pending |
-| F17 | — | Pending |
-| F18 | — | Pending |
-| F19 | — | Pending |
-| F20 | — | Pending |
-| F21 | — | Pending |
-| F22 | — | Pending |
+| F0 | Phase 1 | Pending |
+| F1 | Phase 1 | Pending |
+| F2 | Phase 1 | Pending |
+| F3 | Phase 1 | Pending |
+| F4 | Phase 2 | Pending |
+| F5 | Phase 2 | Pending |
+| F6 | Phase 4 | Pending |
+| F7 | Phase 2 | Pending |
+| F8 | Phase 3 | Pending |
+| F9 | Phase 3 | Pending |
+| F10 | Phase 4 | Pending |
+| F11 | Phase 5 | Pending |
+| F12 | Phase 3 | Pending |
+| F13 | Phase 3 | Pending |
+| F14 | Phase 1 | Pending |
+| F15 | Phase 6 | Pending |
+| F16 | Phase 2 | Pending |
+| F17 | Phase 2 | Pending |
+| F18 | Phase 2 | Pending |
+| F19 | Phase 3 | Pending |
+| F20 | Phase 4 | Pending |
+| F21 | Phase 5 | Pending |
+| F22 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 23 total
-- Mapped to phases: 0
-- Unmapped: 23 ⚠️ (roadmap not yet created)
+- Mapped to phases: 23 ✓
+- Unmapped: 0
+- Duplicates (mapped to more than one phase): 0
+
+**By phase:**
+
+| Phase | Requirements | Count |
+|-------|--------------|-------|
+| 1. Seeded, Governed, Servable Foundation | F0, F1, F2, F3, F14, F22 | 6 |
+| 2. The Flagged Shipment, Explained | F4, F5, F7, F16, F17, F18 | 6 |
+| 3. The Decision Point | F8, F9, F12, F13, F19 | 5 |
+| 4. Close the Gap and Show the Record | F6, F10, F20 | 3 |
+| 5. Named Authority, Proven | F11, F21 | 2 |
+| 6. The Policy Is Yours | F15 | 1 |
 
 ---
 *Requirements defined: 2026-09-08*
-*Last updated: 2026-09-08 after handover from express to phase planning*
+*Last updated: 2026-09-08 after roadmap creation (traceability populated, 23/23 mapped)*
