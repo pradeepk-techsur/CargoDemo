@@ -20,6 +20,18 @@ import {
   type DocumentRepository,
 } from './repositories/documentRepository.js';
 import { createUserRepository, type UserRepository } from './repositories/userRepository.js';
+import {
+  createEvaluationRepository,
+  type EvaluationRepository,
+} from './repositories/evaluationRepository.js';
+import {
+  createExceptionRepository,
+  type ExceptionRepository,
+} from './repositories/exceptionRepository.js';
+import {
+  createEvidenceRepository,
+  type EvidenceRepository,
+} from './repositories/evidenceRepository.js';
 
 // --- re-exports --------------------------------------------------------------
 
@@ -35,6 +47,9 @@ export type {
   RuleRepository,
   DocumentRepository,
   UserRepository,
+  EvaluationRepository,
+  ExceptionRepository,
+  EvidenceRepository,
 };
 export type { CaseProjectionUpdate } from './repositories/caseRepository.js';
 
@@ -44,6 +59,9 @@ export interface Repositories {
   rules: RuleRepository;
   documents: DocumentRepository;
   users: UserRepository;
+  evaluations: EvaluationRepository;
+  exceptions: ExceptionRepository;
+  evidence: EvidenceRepository;
 }
 
 /** Build the repository set bound to a database handle. */
@@ -54,6 +72,9 @@ export function repositories(db: Db): Repositories {
     rules: createRuleRepository(db),
     documents: createDocumentRepository(db),
     users: createUserRepository(db),
+    evaluations: createEvaluationRepository(db),
+    exceptions: createExceptionRepository(db),
+    evidence: createEvidenceRepository(db),
   };
 }
 
