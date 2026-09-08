@@ -19,15 +19,16 @@ Progress: [░░░░░░░░░░] 0%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: 0.0 hours
+- Total plans completed: 2 (express)
+- Average duration: ~12 min
+- Total execution time: 0.4 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| express-wave-1 | 1 | 9 min | 9 min |
+| express-wave-2 | 1 | 14 min | 14 min |
 
 **Recent Trend:**
 - Last 5 plans: —
@@ -48,6 +49,9 @@ Recent decisions affecting current work:
 - [Roadmap]: F21 mapped wholly to Phase 5 because its E2E family cannot complete until step 10 exists; earlier phases still carry plan-level tests.
 - [AD-08/AD-09]: Recommended action and confidence are always deterministic; `CARGODEMO_AI_PROVIDER=none` is the default and every phase's criteria hold with it.
 - [AD-05/AD-06]: Deterministic port 3000 bound to 0.0.0.0, no frame-blocking headers — owned by Phase 1.
+- [Wave 2]: `min_shipment_value_usd` param kept as spelled; compared as `shipment_value_cents/100 >= min_shipment_value_usd` (no column rename, no new column).
+- [Wave 2]: Rules ordered by explicit SEVERITY_RANK DESC (LOW0/MED1/HIGH2/CRIT3), never string sort; same rank drives max(severity) in priority derivation.
+- [Wave 2]: `evaluations.duration_ms` pinned to 0 under deterministic (seed/test) mode for byte-identical reseeds; live evaluations record the real value.
 
 ### Pending Todos
 
@@ -61,9 +65,10 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-09-08
-Stopped at: Completed express-wave-1 plan 01 (SQLite schema + migration runner + self-check + deterministic seed + repository layer). Commits 05f60b9, e9bd2f7, 89a00cf. See .planning/express/cargodemo-cbp-cargo-exception-review-app/01-SUMMARY.md
+Stopped at: Completed express-wave-2 plan 02 (config-driven rule engine + F5 detection + seed hook). Commits 5061098, f065132, 0e7c657. See .planning/express/cargodemo-cbp-cargo-exception-review-app/02-SUMMARY.md
 Resume file: None
 
 ### Express task progress
 
 - express/cargodemo-cbp-cargo-exception-review-app plan 01 (wave 1, database): COMPLETE — 21-table schema, F0 migrations/self-check, F2 12-shipment idempotent seed, typed repository contract published at src/infra/db. 24 integration tests green.
+- express/cargodemo-cbp-cargo-exception-review-app plan 02 (wave 2, rules+detection): COMPLETE — F4 pure config-driven rule engine (three evaluators, closed map, Ajv, fingerprint), F5 one-transaction detection with write-time evidence gates + derived priority + queue projection, seed hook populates 12 evaluations / 15 exceptions / 33 evidence on migrate+seed. 78 tests green (9 files). detectExceptions/createEvaluateHook/derivePriority + ExceptionRecord projection published for wave 3.
