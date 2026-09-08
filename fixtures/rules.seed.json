@@ -1,0 +1,131 @@
+[
+  {
+    "id": "rule-doc-baseline",
+    "name": "Baseline Required Documents",
+    "exception_type": "MISSING_REQUIRED_DOCUMENT",
+    "description": "Every shipment must carry a commercial invoice, packing list and bill of lading before it can clear customs review.",
+    "policy_reference": "19 CFR 141.81",
+    "severity": "MEDIUM",
+    "enabled": 1,
+    "conditions": {},
+    "params": {
+      "required_document_types": ["COMMERCIAL_INVOICE", "PACKING_LIST", "BILL_OF_LADING"],
+      "match_mode": "ALL",
+      "accept_statuses": ["RECEIVED"],
+      "require_file_present": true,
+      "ignore_superseded": true
+    }
+  },
+  {
+    "id": "rule-doc-highvalue-coo",
+    "name": "High-Value Certificate of Origin",
+    "exception_type": "MISSING_REQUIRED_DOCUMENT",
+    "description": "Shipments valued at or above fifty thousand dollars require a certificate of origin to substantiate the declared country of origin.",
+    "policy_reference": "19 CFR 102.0",
+    "severity": "HIGH",
+    "enabled": 1,
+    "conditions": { "min_shipment_value_usd": 50000 },
+    "params": {
+      "required_document_types": ["CERTIFICATE_OF_ORIGIN"],
+      "match_mode": "ALL",
+      "accept_statuses": ["RECEIVED"],
+      "require_file_present": true,
+      "ignore_superseded": true
+    }
+  },
+  {
+    "id": "rule-doc-solar-cert",
+    "name": "Solar Commodity Certificate of Origin",
+    "exception_type": "MISSING_REQUIRED_DOCUMENT",
+    "description": "Solar and photovoltaic commodities require a certificate of origin regardless of shipment value given elevated trade-remedy scrutiny.",
+    "policy_reference": "19 CFR 102.0",
+    "severity": "HIGH",
+    "enabled": 0,
+    "conditions": { "commodity_keywords": ["solar", "photovoltaic"] },
+    "params": {
+      "required_document_types": ["CERTIFICATE_OF_ORIGIN"],
+      "match_mode": "ALL",
+      "accept_statuses": ["RECEIVED"],
+      "require_file_present": true,
+      "ignore_superseded": true
+    }
+  },
+  {
+    "id": "rule-hts-completeness",
+    "name": "HTS Code Completeness",
+    "exception_type": "INVALID_HTS_CODE",
+    "description": "The declared HTS classification must contain a complete ten-digit code; incomplete or missing codes are flagged for correction.",
+    "policy_reference": "19 CFR 152.11",
+    "severity": "HIGH",
+    "enabled": 1,
+    "conditions": {},
+    "params": {
+      "expected_digit_count": 10,
+      "min_digit_count": 6,
+      "allowed_separators": [".", "-", " "],
+      "allow_partial": false,
+      "treat_missing_as_exception": true,
+      "check_known_codes": false,
+      "known_code_prefix_length": 6,
+      "known_codes": [],
+      "placeholder_characters": ["X", "x", "*", "?", "#"]
+    }
+  },
+  {
+    "id": "rule-hts-known-chapter",
+    "name": "HTS Known Chapter Check",
+    "exception_type": "INVALID_HTS_CODE",
+    "description": "The declared HTS classification must fall within a recognised tariff chapter drawn from the configured reference list of known code prefixes.",
+    "policy_reference": "HTSUS General Rules",
+    "severity": "MEDIUM",
+    "enabled": 0,
+    "conditions": {},
+    "params": {
+      "expected_digit_count": 10,
+      "min_digit_count": 6,
+      "allowed_separators": [".", "-", " "],
+      "allow_partial": false,
+      "treat_missing_as_exception": true,
+      "check_known_codes": true,
+      "known_code_prefix_length": 4,
+      "known_codes": ["8541", "6109", "8507", "6907", "8708", "8714", "9405", "7318", "0306", "3901", "9403", "2942"],
+      "placeholder_characters": ["X", "x", "*", "?", "#"]
+    }
+  },
+  {
+    "id": "rule-origin-manufacturer",
+    "name": "Manufacturer Origin Consistency",
+    "exception_type": "CONFLICTING_COUNTRY_OF_ORIGIN",
+    "description": "The declared country of origin must be consistent with the manufacturer address country; a mismatch indicates a potential origin misdeclaration.",
+    "policy_reference": "19 CFR 134.1",
+    "severity": "CRITICAL",
+    "enabled": 1,
+    "conditions": {},
+    "params": {
+      "declared_field": "country_of_origin",
+      "comparison_fields": ["manufacturer.address.country"],
+      "treat_missing_declared_as_conflict": true,
+      "treat_missing_comparison_as_conflict": false,
+      "allowed_pairs": [],
+      "case_sensitive": false
+    }
+  },
+  {
+    "id": "rule-origin-certificate",
+    "name": "Certificate Origin Consistency",
+    "exception_type": "CONFLICTING_COUNTRY_OF_ORIGIN",
+    "description": "The declared country of origin must be consistent with the origin stated on any attached certificate of origin document.",
+    "policy_reference": "19 CFR 134.1",
+    "severity": "HIGH",
+    "enabled": 0,
+    "conditions": {},
+    "params": {
+      "declared_field": "country_of_origin",
+      "comparison_fields": ["documents.CERTIFICATE_OF_ORIGIN.stated_country"],
+      "treat_missing_declared_as_conflict": true,
+      "treat_missing_comparison_as_conflict": false,
+      "allowed_pairs": [],
+      "case_sensitive": false
+    }
+  }
+]
