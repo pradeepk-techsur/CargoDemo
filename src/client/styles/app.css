@@ -1,0 +1,132 @@
+/*
+ * Design tokens + global baseline.
+ *
+ * WCAG 2.1 AA: body text >= 4.5:1 on its surface, borders and focus rings >= 3:1,
+ * and disabled-control reason text ALSO >= 4.5:1 — the reason is information, not
+ * decoration. A visible focus ring on every focusable element, including table
+ * rows. Layout sizes from container width and %/rem, never viewport units,
+ * because the app renders inside an iframe of unknown size.
+ */
+
+:root {
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-sunken: #f4f6f8;
+  --surface-raised: #ffffff;
+
+  /* Text — all >= 4.5:1 on --surface */
+  --text: #16202c;
+  --text-muted: #475467; /* 7.0:1 on white — used for reason text too */
+  --text-inverse: #ffffff;
+
+  /* Borders / lines — >= 3:1 */
+  --border: #c4ccd6;
+  --border-strong: #7d8895;
+
+  /* Focus ring */
+  --focus-ring: #1554b4;
+
+  /* Status accents (shape/label always accompany colour) */
+  --accent: #1554b4;
+  --danger: #a8200d;
+  --warn: #8a5a00;
+  --ok: #1c6b3c;
+
+  /* Authorship bands */
+  --band-system-border: #c4ccd6;
+  --band-human-border: #1554b4;
+  --band-human-surface: #f5f8fe;
+
+  /* Spacing / radius */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --radius: 6px;
+
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--surface-sunken);
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+#root {
+  min-height: 100%;
+  width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  margin: 0 0 var(--sp-3) 0;
+}
+
+a {
+  color: var(--accent);
+}
+
+button {
+  font: inherit;
+}
+
+/* Visible focus ring on EVERY focusable element, rows included. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: var(--sp-5);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reason text for a disabled control — must meet body contrast. */
+.reason-text {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
