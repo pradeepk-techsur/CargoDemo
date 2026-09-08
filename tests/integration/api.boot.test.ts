@@ -74,10 +74,19 @@ describe('api boot + context wiring', () => {
     expect(body.error.request_id).toBe(res.headers['x-request-id']);
   });
 
-  it('a non-/api path → 200 SPA fallback notice, not 404 and not 500', async () => {
+  it('a non-/api path → 200 SPA fallback, not 404 and not 500', async () => {
     const res = await app.inject({ method: 'GET', url: '/dashboard' });
     expect(res.statusCode).toBe(200);
-    expect(res.body).toContain('CargoDemo API is running');
+    // Two valid shapes: the "client bundle not built" text/plain notice when
+    // dist/client is absent, or the built SPA index.html once wave 4 has run
+    // `npm run build:client`. Either is a 200 (never a 404 or 500).
+    const servedBundle =
+      (res.headers['content-type'] as string | undefined)?.includes('text/html') ?? false;
+    if (servedBundle) {
+      expect(res.body).toContain('<div id="root">');
+    } else {
+      expect(res.body).toContain('CargoDemo API is running');
+    }
   });
 
   describe('iframe safety — no framing header, ever', () => {
