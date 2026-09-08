@@ -10,6 +10,7 @@
     "migrate": "tsx scripts/migrate.ts",
     "seed": "tsx scripts/seed.ts",
     "seed:reset": "tsx scripts/seed.ts --force-reseed",
+    "prestart": "node scripts/ensureClientBuild.mjs",
     "start": "tsx src/server/index.ts",
     "dev": "tsx watch src/server/index.ts",
     "dev:client": "vite",
@@ -17,6 +18,9 @@
     "build": "npm run build:client",
     "preview:client": "vite preview",
     "test:e2e": "playwright test",
+    "verify:preview": "node scripts/verifyPreview.mjs",
+    "verify:journey": "playwright test --config=playwright.journey.config.ts",
+    "verify:all": "npm run typecheck && npm test && npm run build:client && npm run verify:preview && npm run test:e2e && npm run verify:journey",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
