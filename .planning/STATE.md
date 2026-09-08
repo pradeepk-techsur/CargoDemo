@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 Phase: 1 of 6 (Seeded, Governed, Servable Foundation)
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-09-08 — Express wave 5 complete: single-command boot (`npm start` builds→migrates→seeds→asserts non-empty queue→serves 0.0.0.0:3000) + verify:preview (iframe-safe) + verify:journey (6-stage end-to-end). verify:all green: 134 vitest + PREVIEW OK + 27 e2e + 6 journey
+Last activity: 2026-09-08 - Completed express task: CargoDemo — CBP cargo exception review app (reduced scope, 8/23 features, 5 waves; single-command boot + Playwright journey green)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -88,6 +88,12 @@ None yet.
 
 - [Spec context] Three spec masters are too large to read whole (FRD 4749 lines, TechArch 3407, UX-Mockup 2581, UserStories 1632). Use the chunked directories: `project_specs/FRD/`, `project_specs/TechArch/`, `project_specs/UX-Mockup/`, `project_specs/UserStories/`.
 - [RTM G1] The four screens and shell have no dedicated component test family — coverage is E2E-only unless per-screen tests are added during phase planning.
+
+### Express Tasks Completed
+
+| # | Description | Date | Commit | Scope | Directory |
+|---|-------------|------|--------|-------|-----------|
+| cargodemo-cbp-cargo-exception-review-app | CargoDemo — CBP cargo exception review app (flag → review → act slice of JRN-01.1) | 2026-09-08 | e92191b | mvp 8/23 | [cargodemo-cbp-cargo-exception-review-app](./express/cargodemo-cbp-cargo-exception-review-app/) |
 
 ## Session Continuity
 
