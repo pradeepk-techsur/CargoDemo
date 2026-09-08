@@ -61,5 +61,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-09-08
-Stopped at: ROADMAP.md and STATE.md written; REQUIREMENTS.md traceability populated
+Stopped at: Completed express-wave-1 plan 01 (SQLite schema + migration runner + self-check + deterministic seed + repository layer). Commits 05f60b9, e9bd2f7, 89a00cf. See .planning/express/cargodemo-cbp-cargo-exception-review-app/01-SUMMARY.md
 Resume file: None
+
+### Express task progress
+
+- express/cargodemo-cbp-cargo-exception-review-app plan 01 (wave 1, database): COMPLETE — 21-table schema, F0 migrations/self-check, F2 12-shipment idempotent seed, typed repository contract published at src/infra/db. 24 integration tests green.
