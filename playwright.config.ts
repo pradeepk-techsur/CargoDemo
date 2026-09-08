@@ -8,6 +8,9 @@ import { defineConfig, devices } from '@playwright/test';
 // endpoint, because that belongs to a deferred feature.
 export default defineConfig({
   testDir: 'e2e',
+  // The journey run owns e2e/journey/** and its own database (./data/journey.db);
+  // this suite ignores it so the two harnesses never share writes.
+  testIgnore: '**/journey/**',
   timeout: 30_000,
   expect: { timeout: 10_000 },
   fullyParallel: false, // one server, one SQLite file, mutating specs
