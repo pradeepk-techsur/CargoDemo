@@ -18,6 +18,7 @@ export interface Config {
   CARGODEMO_SEED_CLOCK: string;
   CARGODEMO_AI_PROVIDER: AiProvider;
   CARGODEMO_LOG_LEVEL: LogLevel;
+  CARGODEMO_DEFAULT_ACTOR_USER_ID: string;
 }
 
 export class ConfigError extends Error {
@@ -77,6 +78,14 @@ const ISO_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   const host = readString(env, 'CARGODEMO_HOST', '0.0.0.0');
 
+  // A localhost/loopback bind cannot be reached by the sandbox preview proxy;
+  // warn loudly rather than defaulting silently to a value that blanks the demo.
+  if (host === 'localhost' || host === '127.0.0.1') {
+    process.stderr.write(
+      `CONFIG_WARNING: CARGODEMO_HOST='${host}' is loopback-only; the preview proxy cannot reach it. Use 0.0.0.0.\n`,
+    );
+  }
+
   const seedClock = readString(env, 'CARGODEMO_SEED_CLOCK', '2026-09-01T08:00:00.000Z');
   if (!ISO_INSTANT.test(seedClock) || Number.isNaN(Date.parse(seedClock))) {
     throw new ConfigError(
@@ -93,6 +102,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     CARGODEMO_SEED_CLOCK: seedClock,
     CARGODEMO_AI_PROVIDER: readEnum(env, 'CARGODEMO_AI_PROVIDER', AI_PROVIDERS, 'none'),
     CARGODEMO_LOG_LEVEL: readEnum(env, 'CARGODEMO_LOG_LEVEL', LOG_LEVELS, 'info'),
+    CARGODEMO_DEFAULT_ACTOR_USER_ID: readString(
+      env,
+      'CARGODEMO_DEFAULT_ACTOR_USER_ID',
+      'usr-cs-001',
+    ),
   };
 }
 
