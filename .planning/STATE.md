@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 Phase: 1 of 6 (Seeded, Governed, Servable Foundation)
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-09-08 — Roadmap created; all 23 requirements (F0–F22) mapped to 6 phases
+Last activity: 2026-09-08 — Express wave 3 complete: F9 workflow state machine + F3 six-route HTTP API on 0.0.0.0:3000 (134 tests green)
 
 Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2 (express)
-- Average duration: ~12 min
-- Total execution time: 0.4 hours
+- Total plans completed: 3 (express)
+- Average duration: ~15 min
+- Total execution time: 0.7 hours
 
 **By Phase:**
 
@@ -29,6 +29,7 @@ Progress: [░░░░░░░░░░] 0%
 |-------|-------|-------|----------|
 | express-wave-1 | 1 | 9 min | 9 min |
 | express-wave-2 | 1 | 14 min | 14 min |
+| express-wave-3 | 1 | 21 min | 21 min |
 
 **Recent Trend:**
 - Last 5 plans: —
@@ -52,6 +53,10 @@ Recent decisions affecting current work:
 - [Wave 2]: `min_shipment_value_usd` param kept as spelled; compared as `shipment_value_cents/100 >= min_shipment_value_usd` (no column rename, no new column).
 - [Wave 2]: Rules ordered by explicit SEVERITY_RANK DESC (LOW0/MED1/HIGH2/CRIT3), never string sort; same rank drives max(severity) in priority derivation.
 - [Wave 2]: `evaluations.duration_ms` pinned to 0 under deterministic (seed/test) mode for byte-identical reseeds; live evaluations record the real value.
+- [Wave 3]: CLEAR_EXCEPTION reaches CLEARED directly, recording the acting user as approving official (schema CHECK satisfied honestly); two-person approval deferred.
+- [Wave 3]: Role dimension collapsed (access control out of scope) — every action attributed to usr-cs-001; PENDING_APPROVAL is seed-only inbound with its outbound rows permitted.
+- [Wave 3]: Exactly one cases.status writer (workflowRepository.applyTransition), reachable only from executeAction; asserted by a source-walk test.
+- [Wave 3]: Fastify ajv removeAdditional:false + queueService allow-list, because Fastify silently strips unknown querystring props; unknown param -> 422 INVALID_QUERY_PARAM.
 
 ### Pending Todos
 
@@ -65,10 +70,11 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-09-08
-Stopped at: Completed express-wave-2 plan 02 (config-driven rule engine + F5 detection + seed hook). Commits 5061098, f065132, 0e7c657. See .planning/express/cargodemo-cbp-cargo-exception-review-app/02-SUMMARY.md
+Stopped at: Completed express/cargodemo-cbp-cargo-exception-review-app plan 03 (wave 3, F9 workflow state machine + F3 HTTP API). Commits ca3a8db, 7ad1115, aa66060. See .planning/express/cargodemo-cbp-cargo-exception-review-app/03-SUMMARY.md
 Resume file: None
 
 ### Express task progress
 
 - express/cargodemo-cbp-cargo-exception-review-app plan 01 (wave 1, database): COMPLETE — 21-table schema, F0 migrations/self-check, F2 12-shipment idempotent seed, typed repository contract published at src/infra/db. 24 integration tests green.
 - express/cargodemo-cbp-cargo-exception-review-app plan 02 (wave 2, rules+detection): COMPLETE — F4 pure config-driven rule engine (three evaluators, closed map, Ajv, fingerprint), F5 one-transaction detection with write-time evidence gates + derived priority + queue projection, seed hook populates 12 evaluations / 15 exceptions / 33 evidence on migrate+seed. 78 tests green (9 files). detectExceptions/createEvaluateHook/derivePriority + ExceptionRecord projection published for wave 3.
+- express/cargodemo-cbp-cargo-exception-review-app plan 03 (wave 3, workflow+API): COMPLETE — F9 pure state machine (35 transitions as data, four guards, mandatory justification), F3 six-route Fastify API bound 0.0.0.0:3000 with uniform error envelope + iframe-safe headers (no framing header/directive), transactional executeAction as the sole cases.status writer. 134 tests green (15 files). src/shared/api contract published for wave 4; CLEAR_EXCEPTION records acting user as approving official (two-person approval deferred). Fastify + @fastify/static added.
