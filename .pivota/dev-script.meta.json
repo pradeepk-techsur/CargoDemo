@@ -2,16 +2,33 @@
   "generator_version": "init-dev-server@1",
   "catalog_entry": null,
   "generated_at": "2026-09-08T22:30:04Z",
-  "inspection_inputs_hash": "1951611cefd3fd1a80966fdc227c5a573e1a228ab78eec17668716b52d7fedea",
+  "inspection_inputs_hash": "f174f94c965f31b78320b5259b08025ba77f4eb335514a1431594fb2b535f481",
   "inspection_inputs": {
     "matched_globs": [
       "package.json",
       "vite.config.ts"
     ],
     "manifest_signatures": [
-      "package.json:dep:fastify@^4.29.1",
-      "package.json:dep:vite@^5.4.0",
-      "package.json:dev-script:tsx watch src/server/index.ts"
+      "package.json:dependencies:fastify@^4.29.1",
+      "package.json:dependencies:react@^18.3.1",
+      "package.json:dev-script:tsx watch src/server/index.ts",
+      "package.json:devDependencies:vite@^5.4.0",
+      "package.json:script:build:client=vite build",
+      "package.json:script:build=npm run build:client",
+      "package.json:script:dev:client=vite",
+      "package.json:script:dev=tsx watch src/server/index.ts",
+      "package.json:script:migrate=tsx scripts/migrate.ts",
+      "package.json:script:prestart=node scripts/ensureClientBuild.mjs",
+      "package.json:script:preview:client=vite preview",
+      "package.json:script:seed:reset=tsx scripts/seed.ts --force-reseed",
+      "package.json:script:seed=tsx scripts/seed.ts",
+      "package.json:script:start=tsx src/server/index.ts",
+      "package.json:script:test:e2e=playwright test",
+      "package.json:script:test=vitest run",
+      "package.json:script:typecheck=tsc --noEmit",
+      "package.json:script:verify:all=npm run typecheck && npm test && npm run build:client && npm run verify:preview && npm run test:e2e && npm run verify:journey",
+      "package.json:script:verify:journey=playwright test --config=playwright.journey.config.ts",
+      "package.json:script:verify:preview=node scripts/verifyPreview.mjs"
     ],
     "existing_scripts": []
   }
