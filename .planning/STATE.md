@@ -1,3 +1,15 @@
+---
+pivota_spec_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: planning
+stopped_at: Completed express/cargodemo-cbp-cargo-exception-review-app plan 05 (wave 5, integration)
+last_updated: "2026-09-08T22:15:49.963Z"
+last_activity: "2026-09-08 — Express wave 4 complete: F17 Cargo Exception Queue + F18 Shipment Review React/Vite SPA served by the wave-3 API on 0.0.0.0:3000 (134 vitest + 27 Playwright green)"
+progress:
+  percent: 0
+---
+
 # Project State
 
 ## Project Reference
@@ -12,16 +24,16 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 Phase: 1 of 6 (Seeded, Governed, Servable Foundation)
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-09-08 — Express wave 4 complete: F17 Cargo Exception Queue + F18 Shipment Review React/Vite SPA served by the wave-3 API on 0.0.0.0:3000 (134 vitest + 27 Playwright green)
+Last activity: 2026-09-08 — Express wave 5 complete: single-command boot (`npm start` builds→migrates→seeds→asserts non-empty queue→serves 0.0.0.0:3000) + verify:preview (iframe-safe) + verify:journey (6-stage end-to-end). verify:all green: 134 vitest + PREVIEW OK + 27 e2e + 6 journey
 
 Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4 (express)
-- Average duration: ~15 min
-- Total execution time: 1.0 hours
+- Total plans completed: 5 (express)
+- Average duration: ~17 min
+- Total execution time: 1.4 hours
 
 **By Phase:**
 
@@ -31,8 +43,10 @@ Progress: [░░░░░░░░░░] 0%
 | express-wave-2 | 1 | 14 min | 14 min |
 | express-wave-3 | 1 | 21 min | 21 min |
 | express-wave-4 | 1 | 16 min | 16 min |
+| express-wave-5 | 1 | 25 min | 25 min |
 
 **Recent Trend:**
+
 - Last 5 plans: —
 - Trend: —
 
@@ -61,6 +75,10 @@ Recent decisions affecting current work:
 - [Wave 4]: Client routes diverge from the mockups on purpose — queue at `/` (landing), review at `/shipments/:shipmentId` — because the application shell is deferred; the queue must be the root to be reachable without typing a URL.
 - [Wave 4]: URL-restored QueueQuery params are forwarded to the server verbatim (never intersected with the frozen enums); the server is the sole validator, a 422 renders queue-error, not unfiltered data.
 - [Wave 4]: The one UI-reachable action rejection is CASE_VERSION_CONFLICT (the panel disables unavailable actions), proven in cross-screen.spec by staling the held case_version.
+- [Wave 5]: Single-command boot via `npm start` + `prestart` build guard — build-if-stale → migrate → seed-if-empty → assert queue non-empty (QUEUE_EMPTY_AFTER_SEED exit 1) → serve 0.0.0.0:3000. No docker-compose (SQLite is file-backed).
+- [Wave 5]: Readiness probed by GET /api/queue (no health endpoint — that feature is deferred); the queue proves the whole data path in one request.
+- [Wave 5]: The two Playwright harnesses are partitioned by testIgnore '**/journey/**' + disjoint DB files (e2e.db vs journey.db), run sequentially; the journey run always starts from a freshly seeded canonical shipment.
+- [Wave 5]: The journey submits PLACE_ON_HOLD (NEW→ON_HOLD), non-terminal so the state change is visible on both screens; CLEAR_EXCEPTION avoided to not imply a supervisor approval that is deferred.
 
 ### Pending Todos
 
@@ -73,8 +91,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-09-08
-Stopped at: Completed express/cargodemo-cbp-cargo-exception-review-app plan 04 (wave 4, F17 queue + F18 review React/Vite SPA). Commits 5de9636, a5088b0, 61d4018. See .planning/express/cargodemo-cbp-cargo-exception-review-app/04-SUMMARY.md
+Last session: 2026-09-08T22:15:49.962Z
+Stopped at: Completed express/cargodemo-cbp-cargo-exception-review-app plan 05 (wave 5, integration)
 Resume file: None
 
 ### Express task progress
@@ -83,3 +101,4 @@ Resume file: None
 - express/cargodemo-cbp-cargo-exception-review-app plan 02 (wave 2, rules+detection): COMPLETE — F4 pure config-driven rule engine (three evaluators, closed map, Ajv, fingerprint), F5 one-transaction detection with write-time evidence gates + derived priority + queue projection, seed hook populates 12 evaluations / 15 exceptions / 33 evidence on migrate+seed. 78 tests green (9 files). detectExceptions/createEvaluateHook/derivePriority + ExceptionRecord projection published for wave 3.
 - express/cargodemo-cbp-cargo-exception-review-app plan 03 (wave 3, workflow+API): COMPLETE — F9 pure state machine (35 transitions as data, four guards, mandatory justification), F3 six-route Fastify API bound 0.0.0.0:3000 with uniform error envelope + iframe-safe headers (no framing header/directive), transactional executeAction as the sole cases.status writer. 134 tests green (15 files). src/shared/api contract published for wave 4; CLEAR_EXCEPTION records acting user as approving official (two-person approval deferred). Fastify + @fastify/static added.
 - express/cargodemo-cbp-cargo-exception-review-app plan 04 (wave 4, frontend): COMPLETE — F17 Cargo Exception Queue at `/` (server-side filter/sort, multi-exception chips, keyboard+pointer row nav, three empty/error states, URL-persisted query) + F18 Shipment Review at `/shipments/:shipmentId` (entry data, documents-as-absence, per-exception rule/authority/assertion/evidence, five-action panel gated on a mandatory human justification with server-advertised min, confirmation quoting justification in the human band, request_id error surfacing). React 18 + Vite 5 + React Router 6 + TanStack Query 5, CSS Modules; builds to dist/client, served same-origin by the wave-3 API on 0.0.0.0:3000. Client imports only src/shared/api. 27 Playwright tests (4 spec files; only cross-screen mutates state, on SHP-2026-0001) + 134 vitest still green. Application shell/nav/role switcher, AI/recommendation, upload, revalidate, audit, approval chain all deferred and unrendered.
+- express/cargodemo-cbp-cargo-exception-review-app plan 05 (wave 5, integration): COMPLETE — THE SINGLE START COMMAND: `npm start` on a fresh checkout (no ./data, no dist/client) builds the client via a prestart guard (scripts/ensureClientBuild.mjs, build-if-stale), migrates, seeds with detection, asserts the queue is non-empty (QUEUE_EMPTY_AFTER_SEED exit 1 / worked-empty warning), and serves 0.0.0.0:3000 with a readiness block printing the literal preview URL. verify:preview (scripts/verifyPreview.mjs) boots the real command and proves iframe-safety (no X-Frame-Options / CSP frame-ancestors), deep-link fallback, JSON error envelope on unknown /api, no CORS, no dead client nav target — killing its own process group every exit. verify:journey (e2e/journey/primary-journey.spec.ts, partitioned config) is one 6-stage browser run: non-empty queue → SHP-2026-0007 opens → 3 evidenced exceptions (Malaysia|China, 8541.40 10-vs-6, missing cert) → PLACE_ON_HOLD with a typed ≥40-char justification → On hold on both screens; asserts no deferred surface renders. verify:all green (134 vitest + PREVIEW OK + 27 e2e + 6 journey). No docker-compose, no health/reset endpoint, no new dependency. Terminal wave of the build.
