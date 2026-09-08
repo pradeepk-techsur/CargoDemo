@@ -52,6 +52,7 @@ export interface SeedReport {
   documents_created: number;
   evaluations_created: number;
   exceptions_created: number;
+  evidence_created: number;
   coverage: {
     exception_types: string[];
     statuses: string[];
@@ -199,6 +200,13 @@ export function runSeed(db: Db, opts: SeedOptions): SeedReport {
 
   const seedTxn = db.transaction(() => {
     if (opts.mode === 'FORCE_RESEED') {
+      // Break the forward/self references the wave-2 detection layer creates
+      // before the ordered deletes run: cases.current_evaluation_id points at
+      // evaluations (deleted later in the list) and
+      // exceptions.superseded_by_exception_id points within exceptions. Clearing
+      // them first lets the reverse-dependency delete order succeed.
+      db.prepare('UPDATE cases SET current_evaluation_id = NULL').run();
+      db.prepare('UPDATE exceptions SET superseded_by_exception_id = NULL').run();
       for (const table of RESET_ORDER) {
         db.prepare(`DELETE FROM ${table}`).run();
       }
@@ -403,11 +411,23 @@ export function runSeed(db: Db, opts: SeedOptions): SeedReport {
     // --- coverage assertions (before commit) ---
     assertCoverage(entries);
 
+    // When the wave-2 hook populated detection, assert the demo is real: the
+    // detected exception set must match the fixtures' declared expectations,
+    // every exception must have evidence, and the canonical/clean scenarios
+    // must hold. A half-populated demo is worse than a failed seed.
+    if (opts.evaluate) {
+      assertDetectionCoverageImpl(db, entries);
+    }
+
+    // Recount report fields from the database so the numbers are observed facts.
     const evaluationsCreated = (
       db.prepare('SELECT COUNT(*) AS c FROM evaluations').get() as { c: number }
     ).c;
     const exceptionsCreated = (
       db.prepare('SELECT COUNT(*) AS c FROM exceptions').get() as { c: number }
+    ).c;
+    const evidenceCreated = (
+      db.prepare('SELECT COUNT(*) AS c FROM evidence').get() as { c: number }
     ).c;
 
     const multiException = entries
@@ -423,6 +443,7 @@ export function runSeed(db: Db, opts: SeedOptions): SeedReport {
       documents_created: documentsCreated,
       evaluations_created: evaluationsCreated,
       exceptions_created: exceptionsCreated,
+      evidence_created: evidenceCreated,
       coverage: {
         exception_types: [
           ...new Set(entries.flatMap((e) => e.expected_exception_types)),
@@ -459,6 +480,7 @@ function emptyReport(
     documents_created: 0,
     evaluations_created: 0,
     exceptions_created: 0,
+    evidence_created: 0,
     coverage: {
       exception_types: [],
       statuses: [],
@@ -549,6 +571,92 @@ function assertCoverage(entries: CargoEntryFixture[]): void {
   }
 
   assertCanonicalScenario(entries);
+}
+
+/**
+ * Assert the wave-2 hook left a real, consistent exception set behind. Throws
+ * SEED_COVERAGE_FAILED (rolling the whole seed back) if the demo is hollow.
+ * Exported so negative-path tests can drive it against a mutated fixture/db.
+ */
+export function assertDetectionCoverage(db: Db, entries: unknown[]): void {
+  assertDetectionCoverageImpl(db, entries as CargoEntryFixture[]);
+}
+
+function assertDetectionCoverageImpl(db: Db, entries: CargoEntryFixture[]): void {
+  const exceptions = (
+    db.prepare('SELECT COUNT(*) AS c FROM exceptions').get() as { c: number }
+  ).c;
+  const evidence = (db.prepare('SELECT COUNT(*) AS c FROM evidence').get() as { c: number }).c;
+  if (exceptions < 1 || evidence < 1) {
+    throw new SeedError(
+      'SEED_COVERAGE_FAILED',
+      `hook supplied but exceptions=${exceptions}, evidence=${evidence} (both must be > 0)`,
+    );
+  }
+
+  const orphans = (
+    db
+      .prepare(
+        'SELECT COUNT(*) AS c FROM exceptions x WHERE NOT EXISTS (SELECT 1 FROM evidence v WHERE v.exception_id = x.id)',
+      )
+      .get() as { c: number }
+  ).c;
+  if (orphans > 0) {
+    throw new SeedError('SEED_COVERAGE_FAILED', `${orphans} exception(s) have no evidence row`);
+  }
+
+  // Per-shipment: detected OPEN exception types must equal the declared set.
+  const detectedStmt = db.prepare(
+    `SELECT DISTINCT x.exception_type AS t
+     FROM exceptions x
+     JOIN cargo_entries e ON e.id = x.cargo_entry_id
+     WHERE e.shipment_id = ? AND x.status = 'OPEN'`,
+  );
+  for (const e of entries) {
+    const detected = (detectedStmt.all(e.shipment_id) as Array<{ t: string }>)
+      .map((r) => r.t)
+      .sort();
+    const expected = [...new Set(e.expected_exception_types)].sort();
+    if (JSON.stringify(detected) !== JSON.stringify(expected)) {
+      throw new SeedError(
+        'SEED_COVERAGE_FAILED',
+        `${e.shipment_id}: detected [${detected.join(',')}] != expected [${expected.join(',')}]`,
+      );
+    }
+  }
+
+  // Canonical: SHP-2026-0007 has exactly three OPEN exceptions, one per type.
+  const canonical = (
+    db
+      .prepare(
+        `SELECT COUNT(*) AS c FROM exceptions x
+         JOIN cargo_entries e ON e.id = x.cargo_entry_id
+         WHERE e.shipment_id = ? AND x.status = 'OPEN'`,
+      )
+      .get(CANONICAL_SHIPMENT) as { c: number }
+  ).c;
+  if (canonical !== 3) {
+    throw new SeedError(
+      'SEED_COVERAGE_FAILED',
+      `${CANONICAL_SHIPMENT} must have exactly 3 OPEN exceptions, got ${canonical}`,
+    );
+  }
+
+  // Clean: SHP-2026-0011 has zero exceptions and cases.queued = 0.
+  const cleanCase = db
+    .prepare(
+      `SELECT c.queued AS queued,
+              (SELECT COUNT(*) FROM exceptions x WHERE x.cargo_entry_id = c.cargo_entry_id
+               AND x.status = 'OPEN') AS open_count
+       FROM cases c WHERE c.shipment_id = ?`,
+    )
+    .get('SHP-2026-0011') as { queued: number; open_count: number } | undefined;
+  if (!cleanCase || cleanCase.open_count !== 0 || cleanCase.queued !== 0) {
+    throw new SeedError(
+      'SEED_COVERAGE_FAILED',
+      `SHP-2026-0011 must have 0 open exceptions and queued=0`,
+    );
+  }
 }
 
 function assertCanonicalScenario(entries: CargoEntryFixture[]): void {
