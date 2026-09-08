@@ -1,18 +1,19 @@
 import { Routes, Route, Link } from 'react-router-dom';
 
 import { QUEUE_PATH } from './routes';
+import { QueueScreen } from './screens/queue/QueueScreen';
 
 /**
  * The whole navigation surface of the application.
  *
- * In this task only the catch-all is registered, so every path renders the
- * inline not-found. Task 2 adds `/` → QueueScreen and Task 3 adds
- * `/shipments/:shipmentId` → ReviewScreen above the catch-all. There is no shell,
- * no sidebar and no header nav — the application shell feature is deferred.
+ * The queue is the ROOT route: the preview URL with no path lands on it, with no
+ * shell, no sidebar and no header nav. Task 3 adds `/shipments/:shipmentId` →
+ * ReviewScreen above the catch-all. The application shell feature is deferred.
  */
 export function App() {
   return (
     <Routes>
+      <Route path="/" element={<QueueScreen />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
