@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 Phase: 1 of 6 (Seeded, Governed, Servable Foundation)
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-09-08 - UAT verified express task cargodemo-cbp-cargo-exception-review-app (33/33 passed, 0 fix cycles)
+Last activity: 2026-09-08 - UAT verified express task cargodemo-cbp-cargo-exception-review-app (22/22 passed, 1 fix cycle)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -93,7 +93,7 @@ None yet.
 
 | # | Description | Date | Commit | UAT | Scope | Directory |
 |---|-------------|------|--------|-----|-------|-----------|
-| cargodemo-cbp-cargo-exception-review-app | CargoDemo — CBP cargo exception review app (flag → review → act slice of JRN-01.1) | 2026-09-08 | e92191b | ✓ 33/33 | mvp 8/23 | [cargodemo-cbp-cargo-exception-review-app](./express/cargodemo-cbp-cargo-exception-review-app/) |
+| cargodemo-cbp-cargo-exception-review-app | CargoDemo — CBP cargo exception review app (flag → review → act slice of JRN-01.1) | 2026-09-08 | e92191b | ✓ 22/22 | mvp 8/23 | [cargodemo-cbp-cargo-exception-review-app](./express/cargodemo-cbp-cargo-exception-review-app/) |
 
 ## Session Continuity
 

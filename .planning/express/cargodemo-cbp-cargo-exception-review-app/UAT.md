@@ -2,96 +2,135 @@
 slug: cargodemo-cbp-cargo-exception-review-app
 scope: reduced
 deferred_features: [F1, F6, F7, F8, F10, F11, F12, F13, F14, F15, F16, F19, F20, F21, F22]
-stories_excluded_deferred: 15
+stories_excluded_deferred: 41
 flow_steps_verified: 6
 flow_steps_total: 6
-verified: 2026-09-08T22:22:59Z
+verified: 2026-09-08T22:39:49Z
 build: passed
 app_url: http://localhost:3000
 smoke: passed
 dead_links: 0
 routes_failed: 0
-test_attempts: 1
-playwright_pass: 33
+test_attempts: 2
+playwright_pass: 22
 playwright_fail: 0
 playwright_skip: 0
 ---
 
 # UAT — Express Task: cargodemo-cbp-cargo-exception-review-app
 
-**Verified:** 2026-09-08T22:22:59Z
+**Verified:** 2026-09-08
 **Build:** ✓ Passed
 **Application:** http://localhost:3000
-**Scope:** Reduced — 8 of 23 features (JRN-01.1 flag → review → act slice)
 
 ## Test Results
 
 | Status | Count |
 |--------|-------|
-| ✓ Pass | 33 |
+| ✓ Pass | 22 |
 | ✗ Fail | 0 |
 | — Skip | 0 |
-| **Total** | **33** |
+| **Total** | **22** |
 
-**Fix cycles used:** 0/10
+**Fix cycles used:** 2/10
 
-Composition: 6 primary-journey tests (`e2e/journey/primary-journey.spec.ts`) +
-27 e2e tests across queue, review, cross-screen and shell (`e2e/*.spec.ts`).
+The single fix cycle scoped one ambiguous test selector (`queue-clear-filters`
+resolved to two visible elements — the app correctly renders the clear-filters
+affordance both in the filters sidebar and inside the no-match empty state). The
+application code was not defective and was not changed; the test assertion was
+narrowed to the empty-state region so it is unambiguous.
 
 ## User Flow Coverage
 
-Primary flow: JRN-01.1 — flagged queue to a justified, propagated decision
+Primary flow: JRN-01.1 (flag → review → act with a mandatory human justification)
 
 | # | Step (what the user does) | Evidence (file:line) | Status |
 |---|---------------------------|----------------------|--------|
-| 1 | Opens the queue and sees flagged shipments | e2e/journey/primary-journey.spec.ts:46 | pass |
-| 2 | Finds the canonical solar-panel shipment (SHP-2026-0007) and opens it | e2e/journey/primary-journey.spec.ts:76 | pass |
-| 3 | Reads the exceptions with their triggering rule and field-level evidence | e2e/journey/primary-journey.spec.ts:110 | pass |
-| 4 | Submits an action with a mandatory justification | e2e/journey/primary-journey.spec.ts:194 | pass |
-| 5 | Sees the state change reflected on both the review screen and the queue | e2e/journey/primary-journey.spec.ts:244 | pass |
-| 6 | Integrity guards hold (single status writer, no deferred surfaces) | e2e/journey/primary-journey.spec.ts:261 | pass |
+| 1 | Opens the Cargo Exception Queue at `/` and sees flagged shipments in a table | e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts:43 | pass |
+| 2 | Sees the canonical SHP-2026-0007 with three distinct exception chips (never "3 exceptions") | e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts:72 | pass |
+| 3 | Opens SHP-2026-0007 by activating its row, landing on the Shipment Review screen | e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts:100 | pass |
+| 4 | Reads the entry data and the per-exception validation cards with field-level evidence rows | e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts:117 | pass |
+| 5 | Selects "Place on hold", sees only its fields, and Submit stays disabled until the justification is valid | e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts:164 | pass |
+| 6 | Types a valid justification, submits, and sees the confirmation quoting it with the new ON_HOLD status | e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts:203 | pass |
+
+All six primary-flow steps carry `file:line` evidence and a passing test.
 
 ## User Story Coverage
 
-Coverage is against the built scope (features F0, F2, F3, F4, F5, F9, F17, F18).
-Each in-scope capability is exercised by the suites below.
+Stories in the built scope (F0, F2, F3, F4, F5, F9, F17, F18). Every story below
+maps only to built features and was exercised by the generated UAT spec.
 
-| Area | Feature | Suite | Status |
-|-------|---------|-------|--------|
-| Cargo Exception Queue (landing, columns, chips, filter/sort, nav) | F17 | e2e/queue.spec.ts (10 tests) | pass |
-| Shipment Review (entry data, documents-as-absence, evidence, 5-action panel, justification gate) | F18, F9, F5 | e2e/review.spec.ts (8 tests) | pass |
-| Action submit → confirmation → propagation → rejection handling | F9, F3 | e2e/cross-screen.spec.ts (5 tests) | pass |
-| Served SPA document, same-origin API, deep-link fallback, no frame-blocking | F17/F18, F3 | e2e/shell.spec.ts (4 tests) | pass |
-| End-to-end flag → review → act journey on canonical seed | F0, F2, F3, F4, F5, F9, F17, F18 | e2e/journey/primary-journey.spec.ts (6 tests) | pass |
+| Story | Title | Status |
+|-------|-------|--------|
+| US-0.1 | Persist the Full Cargo Exception Domain | pass |
+| US-0.4 | Start with a Seeded, Deterministic Demo Dataset | pass |
+| US-1.5 | See Field-Level Evidence for Every Exception | pass |
+| US-3.1 | Take One of Exactly Five Actions on a Case | pass |
+| US-3.3 | Send a Case for Specialist Review | pass |
+| US-3.4 | Place a Case on Hold with a Stated Reason | pass |
+| US-3.5 | Escalate a Case and Transfer Authority Upward | pass |
+| US-9.2 | Work a Queue of Flagged Shipments | pass |
+| US-9.3 | Filter and Sort the Queue Deterministically | pass |
+| US-9.4 | See Multi-Exception Shipments Without Collapsing | pass |
+| US-9.5 | See the Whole Case on One Review Screen | pass |
 
 ## Deferred by scope decision
 
-These stories were NOT tested because their features are deferred from this build
-(`SCOPE-DECISION.md` → `deferred_scope`). They are not failures and not gaps —
-the functionality was deliberately not built for this express slice.
+Scope for this express run is **reduced** (`SCOPE-DECISION.md` → `deferred_scope`).
+The stories below were NOT tested because their `Feature Ref:` includes at least
+one deferred feature (F1, F6, F7, F8, F10, F11, F12, F13, F14, F15, F16, F19, F20,
+F21, F22). They are not failures and not gaps — the spec describes the whole
+23-feature system while this build is the flag → review → act slice of JRN-01.1.
 
-| Feature | Name | Deferred story areas |
-|---------|------|----------------------|
-| F1 | Cargo Entry Ingestion (JSON / local API) | second ingestion interface |
-| F6 | Shipment Revalidation | walkthrough step 7 |
-| F7 | AI Plain-Language Shipment Summary | walkthrough step 3 |
-| F8 | AI Recommended Resolution with Confidence | walkthrough step 4 (advisory) |
-| F10 | Document Request & Simulated Upload | walkthrough steps 5–6 |
-| F11 | Specialist → Supervisor Approval Chain | walkthrough steps 8–9 |
-| F12 | Decision & Audit Record | walkthrough step 10 |
-| F13 | Notification Generation | notifications off decisions |
-| F14 | Role Simulation & RBAC | roles + server-side enforcement |
-| F15 | Rule Administration | in-app rule editing |
-| F16 | Application Shell, Navigation & Role Switcher | persistent shell/nav |
-| F19 | Recommended Resolution Screen | AI decision-support surface |
-| F20 | Decision & Audit Record Screen | audit surface |
-| F21 | Automated Test Suite | governance-claim test family |
-| F22 | Demo Environment & Reset | one-action reset |
+| Story | Title | Feature Ref (deferred) |
+|-------|-------|------------------------|
+| US-0.2 | Ingest Simulated Cargo Entries from a JSON File | F1 |
+| US-0.3 | Post Cargo Entries to a Local Ingestion Endpoint | F1, F14 |
+| US-0.5 | Consume One Consistent Backend API from the UI | F3, F14 |
+| US-1.6 | Revalidate a Shipment After Its Evidence Changes | F6 |
+| US-1.7 | Have Revalidation Recorded and the AI Refreshed | F6, F12, F13 |
+| US-2.1 | Read a Plain-Language Summary of Why a Shipment Was Flagged | F7, F18 |
+| US-2.2 | See Every AI Output Labelled and Attributed | F7, F8, F18, F19, F20 |
+| US-2.3 | Continue the Walkthrough When the AI Provider Is Unavailable | F7, F8, F22 |
+| US-2.4 | See a Recommended Resolution with an Explicit Confidence Level | F8, F19 |
+| US-2.5 | Have Agreement or Divergence with the AI Recorded | F8, F12 |
+| US-3.2 | Request Additional Information | F9, F10 |
+| US-3.6 | Have Invalid Transitions Rejected with a Clear Reason | F9, F12 |
+| US-3.7 | See Why an Action Is Unavailable to Me | F9, F19 |
+| US-4.1 | Track the Lifecycle of a Document Request | F10 |
+| US-4.2 | Upload a Simulated Document Against an Open Request | F10, F14 |
+| US-4.3 | Be Prevented from Uploading Anything Other Than a Synthetic Document | F10 |
+| US-4.4 | Have an Upload Trigger Revalidation Atomically | F10, F6 |
+| US-4.5 | See Where Every Document Came From | F10, F18 |
+| US-5.1 | Recommend Clearance and Route It to a Supervisor | F11, F9 |
+| US-5.2 | Find Pending-Approval Work Without Hunting for It | F11, F17 |
+| US-5.3 | Approve a Clearance as the Named Approving Official | F11, F12, F13 |
+| US-5.4 | Reject or Return a Recommendation with a Reason | F11, F13 |
+| US-5.5 | Be Warned When the Evidence Changed Since the Recommendation | F11, F6 |
+| US-6.1 | Have Every Decision Recorded with All Eight Required Fields | F12 |
+| US-6.2 | Be Blocked from Finalising an Incomplete Decision | F12, F21 |
+| US-6.3 | Rely on the Record Being Append-Only | F12, F22 |
+| US-6.4 | Read the Complete Case Timeline in Chronological Order | F12, F20 |
+| US-6.5 | Export a Case Record for Offline Review | F12, F20 |
+| US-6.6 | Read the Evidence as It Was at Decision Time | F12, F21 |
+| US-7.1 | Have a Notification Generated on Every Decision and State Change | F13, F12 |
+| US-7.2 | See Notifications In-App and Know They Were Never Sent | F13, F16, F20 |
+| US-8.1 | Enter the Application as a Named Acting User | F14 |
+| US-8.2 | Work Within My Role as a Cargo Specialist | F14 |
+| US-8.3 | Work Within My Role as a Supervisor | F14 |
+| US-8.4 | Have Authorisation Enforced Server-Side on Every Mutating Operation | F14, F21 |
+| US-8.5 | Manage Business Rules as Configuration | F15, F14 |
+| US-8.6 | Preview and Audit the Effect of a Rule Change | F15, F12, F6 |
+| US-9.1 | Navigate the Application with My Role Always Visible | F16 |
+| US-9.6 | See What Changed After a Revalidation | F18, F6 |
+| US-9.7 | Decide from a Screen That States the AI Recommends and I Decide | F19 |
+| US-9.9 | Replay the Complete Audit Trail on a Read-Only Screen | F20, F12 |
 
-The build demonstrates *governed exception detection and a justified human action*.
-It does not demonstrate the approval chain, the audit trail, or the AI assistance —
-the product's three headline governance claims — which are the first items on the
-graduation path in `SCOPE-DECISION.md`.
+Additional deferred stories (Epic 10 test-suite family, Epic 11 walkthrough steps
+3/5/6/7/8/9/10, Epic 12 governance guardrails referencing deferred approval/audit/AI
+features) are likewise out of the built slice. The three governance headline claims —
+the approval chain, the audit trail, and the AI assistance — are deferred by design;
+this slice demonstrates governed exception detection and a justified human action.
 
 ## Failing Tests
 
@@ -99,27 +138,32 @@ None — all tests passed.
 
 ## Playwright Report
 
-Test files:
-- `e2e/journey/primary-journey.spec.ts` (config: `playwright.journey.config.ts`)
-- `e2e/queue.spec.ts`, `e2e/review.spec.ts`, `e2e/cross-screen.spec.ts`, `e2e/shell.spec.ts` (config: `playwright.config.ts`)
+Test file: `e2e/uat/cargodemo-cbp-cargo-exception-review-app.spec.ts`
+Results: `playwright-results.json`
 
-Both configs drive the PRODUCTION path (`npm start` — prestart client build →
-migrate → seed → serve on 0.0.0.0:3000) against a throwaway seeded SQLite DB, so
-each run begins from a freshly seeded canonical shipment.
+Structure (walkthrough shape, `verify-mvp-mode`): three ordered sections —
+1. Primary user flow — JRN-01.1 (flag → review → act) — 6 steps, all pass
+2. Secondary flows (queue filters/sort/chips/empty-states, evidence detail,
+   five-action visible-reason panel, send-for-review + escalate transitions)
+3. Technical checks (seeded deterministic dataset, INVALID_QUERY_PARAM surfaced,
+   deep-link render, unknown /api JSON error envelope)
 
 ## Build Log
 
 Build system: npm
-Build: `npm run build:client` → `dist/client/` produced (client bundle up to date on boot)
-Boot: single-command `npm start` reached a served, seeded app on 0.0.0.0:3000
-Boot smoke (dev-server wrapper `.pivota/start-dev.sh`): pass — port bound, `/` 200,
-`/api/queue` 200 with real seeded rows, no fatal markers
-Route/nav smoke: dead_links=0, routes_failed=0
+Build attempts: 1/10
+Build status: ✓ Passed
+
+The app is a Fastify API on 0.0.0.0:3000 serving the built React/Vite SPA from
+`dist/client` same-origin; SQLite datastore seeded in-process at boot. UAT ran
+against the production start command (`npm start`) via the project's own
+`playwright.config.ts` webServer (fresh `./data/e2e.db` per run).
 
 ## Next Steps
 
-All acceptance criteria **of the built scope** verified — the 8 in-scope features
-across 33 Playwright tests; 15 features deferred (see `## Deferred by scope decision`).
-Express task `cargodemo-cbp-cargo-exception-review-app` is production-ready **for that
-scope**, not for the full 23-feature spec. To build the remainder, follow the
-graduation path in `SCOPE-DECISION.md` (standard phase route).
+All acceptance criteria **of the built scope** verified — 11 of 52 in-spec stories
+tested; 41 deferred (see `## Deferred by scope decision`). Express task
+cargodemo-cbp-cargo-exception-review-app is production-ready **for that scope**
+(the flag → review → act slice of JRN-01.1), not for the full 23-feature spec.
+To build the remainder, take the standard phase route per `SCOPE-DECISION.md` →
+Graduation path.
