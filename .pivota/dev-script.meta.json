@@ -1,0 +1,19 @@
+{
+  "generator_version": "init-dev-server@1",
+  "catalog_entry": null,
+  "generated_at": "2026-09-08T22:30:00Z",
+  "inspection_inputs_hash": "ceecef7cf8964eaa4f36a1339d032464d96442033088997b2a9eb8932d3fa111",
+  "inspection_inputs": {
+    "matched_globs": [
+      "package.json",
+      "vite.config.ts"
+    ],
+    "manifest_signatures": [
+      "package.json:.dependencies.react:^18.3.1",
+      "package.json:.devDependencies.vite:^5.4.0",
+      "package.json:.scripts.dev:tsx watch src/server/index.ts",
+      "package.json:.scripts.start:tsx src/server/index.ts"
+    ],
+    "existing_scripts": []
+  }
+}
