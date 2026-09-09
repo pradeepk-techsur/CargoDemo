@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-opus-5",
+  "permission": {
+    "edit": {
+      "**/opencode.json": "deny",
+      "opencode.json": "deny"
+    },
+    "external_directory": {
+      "/home/daytona/.config/opencode/**": "allow",
+      "/root/.config/opencode/**": "allow",
+      "/tmp/**": "allow",
+      "~/.config/opencode/agents/**": "allow",
+      "~/.config/opencode/pivota_spec-framework/**": "allow"
+    },
+    "read": {
+      "/home/daytona/.config/opencode/**": "allow",
+      "/root/.config/opencode/**": "allow",
+      "/tmp/**": "allow",
+      "~/.config/opencode/agents/**": "allow",
+      "~/.config/opencode/pivota_spec-framework/**": "allow"
+    }
+  },
+  "provider": {
+    "anthropic": {}
+  }
+}

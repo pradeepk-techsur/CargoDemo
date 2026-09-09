@@ -229,11 +229,21 @@ export function QueueScreen(): JSX.Element {
     const page = result.data.page;
     body = (
       <div className={styles.tableWrap}>
-        <QueueTable
-          rows={result.data.data}
-          sortField={sortField}
-          sortDirection={sortDirection}
-        />
+        {/* The seven mandated columns have a floor width; below it the region
+            scrolls horizontally rather than crushing cells into each other.
+            Focusable and labelled so keyboard users can reach the scroll. */}
+        <div
+          className={styles.tableScroll}
+          role="region"
+          aria-label="Flagged shipments"
+          tabIndex={0}
+        >
+          <QueueTable
+            rows={result.data.data}
+            sortField={sortField}
+            sortDirection={sortDirection}
+          />
+        </div>
         <div className={styles.pagination}>
           <button
             type="button"

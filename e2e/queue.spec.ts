@@ -62,14 +62,15 @@ test.describe('Cargo Exception Queue', () => {
   test('priority ordering is deterministic and non-increasing', async ({ page }) => {
     await page.goto('/?sort=priority:desc');
     await expect(page.locator('[data-testid="queue-table"]')).toBeVisible();
-    const rank: Record<string, number> = { Low: 0, Medium: 1, High: 2, Critical: 3 };
-    const labels = await page
-      .locator('[data-testid="queue-row-priority"]')
-      .allInnerTexts();
-    const ranks = labels.map((t) => {
-      const match = Object.keys(rank).find((k) => t.includes(k));
-      return match ? rank[match] : -1;
-    });
+    const rank: Record<string, number> = { LOW: 0, MEDIUM: 1, HIGH: 2, CRITICAL: 3 };
+    // Read the enum off `data-priority`, not the cell text: the derivation basis
+    // in the same cell contains substrings like "Highest", which would make a
+    // text-substring match pass regardless of the real ordering.
+    const values = await page
+      .locator('[data-testid="queue-row-priority"] [data-priority]')
+      .evaluateAll((els) => els.map((el) => el.getAttribute('data-priority') ?? ''));
+    const ranks = values.map((v) => rank[v] ?? -1);
+    expect(ranks).not.toContain(-1);
     for (let i = 1; i < ranks.length; i++) {
       expect(ranks[i]).toBeLessThanOrEqual(ranks[i - 1]);
     }

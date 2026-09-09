@@ -120,13 +120,16 @@ export function QueueTable(props: {
                 <PriorityIndicator
                   priority={row.priority}
                   basis={row.priority_basis_summary}
+                  basisDisplay="tooltip"
                 />
               </td>
               <td data-testid="queue-row-status">
                 <StatusBadge status={row.status} />
               </td>
-              <td data-testid="queue-row-age">{row.age_days}d</td>
-              <td>{formatUsd(row.shipment_value_usd)}</td>
+              <td className={styles.numericCell} data-testid="queue-row-age">
+                {row.age_days}d
+              </td>
+              <td className={styles.numericCell}>{formatUsd(row.shipment_value_usd)}</td>
             </tr>
           );
         })}

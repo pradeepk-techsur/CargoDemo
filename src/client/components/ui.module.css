@@ -50,13 +50,17 @@
   border-radius: 999px;
   font-size: 0.8125rem;
   font-weight: 600;
-  white-space: nowrap;
+  /* Long labels ("Awaiting information") wrap inside the pill rather than
+     stretching it past its column. */
+  white-space: normal;
+  max-width: 100%;
 }
 
 .statusShape {
   width: 0.6rem;
   height: 0.6rem;
   display: inline-block;
+  flex: 0 0 auto;
   background: var(--text);
 }
 
@@ -88,8 +92,20 @@
   background: var(--ok);
 }
 
-/* Priority indicator */
+/* Priority indicator — label row on one line, basis stacked beneath it so a
+   long derivation string can never overflow its container and overlay the
+   neighbouring content. */
 .priority {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-1);
+  position: relative;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.priorityMain {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
@@ -106,11 +122,11 @@
 }
 
 .priorityBasis {
-  display: block;
   color: var(--text-muted);
   font-size: 0.8125rem;
-  margin-top: var(--sp-1);
   max-width: 40ch;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* Exception type chip */

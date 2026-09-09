@@ -91,15 +91,37 @@ export function StatusBadge(props: {
 export function PriorityIndicator(props: {
   priority: Priority;
   basis?: string;
+  /**
+   * How the derivation basis is presented. `inline` stacks it as wrapping text
+   * beneath the label (review header, where there is room). `tooltip` keeps it
+   * out of flow — native tooltip plus screen-reader text — for narrow table
+   * cells where the long basis string would otherwise overflow the column and
+   * paint over neighbouring cells (FRD F17: "basis in its tooltip").
+   */
+  basisDisplay?: 'inline' | 'tooltip';
   testId?: string;
 }): JSX.Element {
+  const basisDisplay = props.basisDisplay ?? 'inline';
   return (
-    <span className={styles.priority} data-testid={props.testId} data-priority={props.priority}>
-      <span className={styles.priorityGlyph} aria-hidden="true">
-        {priorityGlyph(props.priority)}
+    <span
+      className={styles.priority}
+      data-testid={props.testId}
+      data-priority={props.priority}
+      title={props.basis && basisDisplay === 'tooltip' ? props.basis : undefined}
+    >
+      <span className={styles.priorityMain}>
+        <span className={styles.priorityGlyph} aria-hidden="true">
+          {priorityGlyph(props.priority)}
+        </span>
+        <span className={styles.priorityLabel}>{priorityLabel(props.priority)}</span>
       </span>
-      <span className={styles.priorityLabel}>{priorityLabel(props.priority)}</span>
-      {props.basis ? <span className={styles.priorityBasis}>{props.basis}</span> : null}
+      {props.basis ? (
+        <span
+          className={basisDisplay === 'tooltip' ? 'visually-hidden' : styles.priorityBasis}
+        >
+          {props.basis}
+        </span>
+      ) : null}
     </span>
   );
 }
