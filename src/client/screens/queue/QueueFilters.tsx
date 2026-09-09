@@ -6,7 +6,15 @@
  *
  * The applied-filter chips render from the server's `applied` block — the UI
  * shows the server's interpretation, never optimistic client state.
+ *
+ * Controls follow the USWDS form contract. That contract is structural, not just
+ * cosmetic: `usa-checkbox__input` moves the native input out of view and the box
+ * is drawn by `usa-checkbox__label`'s pseudo-elements, so the input MUST be a
+ * SIBLING of a label bound by id — a label-wrapped input renders no visible box
+ * at all. Ids are minted from `useId()` so several instances cannot collide.
  */
+
+import { useId } from 'react';
 
 import type { CaseStatus, ExceptionType, Priority, QueueQuery } from '../../../shared/api';
 import {
@@ -49,24 +57,49 @@ export function QueueFilters(props: {
   onSortDirectionChange: (v: 'asc' | 'desc') => void;
   onClearAll: () => void;
 }): JSX.Element {
+  const uid = useId();
   const selectedStatus = new Set(props.query.status ?? []);
   const selectedType = new Set(props.query.exception_type ?? []);
   const selectedPriority = new Set(props.query.priority ?? []);
+
+  /** One USWDS checkbox: input and label as siblings, bound by a unique id. */
+  function Check(p: {
+    id: string;
+    label: string;
+    checked: boolean;
+    onChange: (checked: boolean) => void;
+  }): JSX.Element {
+    const inputId = `${uid}-${p.id}`;
+    return (
+      <div className="usa-checkbox">
+        <input
+          className="usa-checkbox__input"
+          id={inputId}
+          type="checkbox"
+          checked={p.checked}
+          onChange={(e) => p.onChange(e.target.checked)}
+        />
+        <label className="usa-checkbox__label" htmlFor={inputId}>
+          {p.label}
+        </label>
+      </div>
+    );
+  }
 
   return (
     <aside className={styles.filters} aria-label="Queue filters">
       {props.appliedChips.length > 0 ? (
         <div className={styles.appliedFilters} data-testid="queue-applied-filters">
           {props.appliedChips.map((chip) => (
-            <span key={chip.key} className={styles.appliedChip}>
+            <span key={chip.key} className={`usa-tag ${styles.appliedChip}`}>
               {chip.label}
               <button
                 type="button"
-                className={styles.removeChip}
+                className={`usa-button usa-button--unstyled ${styles.removeChip}`}
                 aria-label={`Remove filter: ${chip.label}`}
                 onClick={chip.onRemove}
               >
-                ×
+                <span aria-hidden="true">&times;</span>
               </button>
             </span>
           ))}
@@ -76,7 +109,7 @@ export function QueueFilters(props: {
       {props.hasAnyFilter ? (
         <button
           type="button"
-          className={styles.clearAll}
+          className={`usa-button usa-button--outline ${styles.clearAll}`}
           data-testid="queue-clear-filters"
           onClick={props.onClearAll}
         >
@@ -84,73 +117,68 @@ export function QueueFilters(props: {
         </button>
       ) : null}
 
-      <fieldset className={styles.fieldset} data-testid="queue-filter-status">
-        <legend className={styles.legend}>Status</legend>
+      <fieldset className="usa-fieldset" data-testid="queue-filter-status">
+        <legend className="usa-legend">Status</legend>
         {STATUS_VALUES.map((s) => (
-          <label key={s} className={styles.checkboxRow}>
-            <input
-              type="checkbox"
-              checked={selectedStatus.has(s)}
-              onChange={() => props.onToggleStatus(s)}
-            />
-            {statusLabel(s)}
-          </label>
+          <Check
+            key={s}
+            id={`status-${s}`}
+            label={statusLabel(s)}
+            checked={selectedStatus.has(s)}
+            onChange={() => props.onToggleStatus(s)}
+          />
         ))}
       </fieldset>
 
-      <fieldset className={styles.fieldset} data-testid="queue-filter-exception-type">
-        <legend className={styles.legend}>Exception type</legend>
+      <fieldset className="usa-fieldset" data-testid="queue-filter-exception-type">
+        <legend className="usa-legend">Exception type</legend>
         {EXCEPTION_TYPE_VALUES.map((t) => (
-          <label key={t} className={styles.checkboxRow}>
-            <input
-              type="checkbox"
-              checked={selectedType.has(t)}
-              onChange={() => props.onToggleExceptionType(t)}
-            />
-            {exceptionTypeLabel(t)}
-          </label>
+          <Check
+            key={t}
+            id={`type-${t}`}
+            label={exceptionTypeLabel(t)}
+            checked={selectedType.has(t)}
+            onChange={() => props.onToggleExceptionType(t)}
+          />
         ))}
       </fieldset>
 
-      <fieldset className={styles.fieldset} data-testid="queue-filter-priority">
-        <legend className={styles.legend}>Priority</legend>
+      <fieldset className="usa-fieldset" data-testid="queue-filter-priority">
+        <legend className="usa-legend">Priority</legend>
         {PRIORITY_VALUES.map((p) => (
-          <label key={p} className={styles.checkboxRow}>
-            <input
-              type="checkbox"
-              checked={selectedPriority.has(p)}
-              onChange={() => props.onTogglePriority(p)}
-            />
-            {priorityLabel(p)}
-          </label>
+          <Check
+            key={p}
+            id={`priority-${p}`}
+            label={priorityLabel(p)}
+            checked={selectedPriority.has(p)}
+            onChange={() => props.onTogglePriority(p)}
+          />
         ))}
       </fieldset>
 
-      <fieldset className={styles.fieldset}>
-        <legend className={styles.legend}>Include</legend>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={props.query.include_clean ?? false}
-            onChange={(e) => props.onToggleIncludeClean(e.target.checked)}
-          />
-          Clean entries
-        </label>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={props.query.include_cleared ?? false}
-            onChange={(e) => props.onToggleIncludeCleared(e.target.checked)}
-          />
-          Cleared cases
-        </label>
+      <fieldset className="usa-fieldset">
+        <legend className="usa-legend">Include</legend>
+        <Check
+          id="include-clean"
+          label="Clean entries"
+          checked={props.query.include_clean ?? false}
+          onChange={props.onToggleIncludeClean}
+        />
+        <Check
+          id="include-cleared"
+          label="Cleared cases"
+          checked={props.query.include_cleared ?? false}
+          onChange={props.onToggleIncludeCleared}
+        />
       </fieldset>
 
       <div className={styles.selectRow}>
-        <label htmlFor="sort-field">Sort by</label>
+        <label className="usa-label" htmlFor="sort-field">
+          Sort by
+        </label>
         <select
           id="sort-field"
-          className={styles.select}
+          className="usa-select"
           data-testid="queue-sort-field"
           value={props.sortField}
           onChange={(e) => props.onSortFieldChange(e.target.value)}
@@ -164,10 +192,12 @@ export function QueueFilters(props: {
       </div>
 
       <div className={styles.selectRow}>
-        <label htmlFor="sort-direction">Direction</label>
+        <label className="usa-label" htmlFor="sort-direction">
+          Direction
+        </label>
         <select
           id="sort-direction"
-          className={styles.select}
+          className="usa-select"
           data-testid="queue-sort-direction"
           value={props.sortDirection}
           onChange={(e) => props.onSortDirectionChange(e.target.value as 'asc' | 'desc')}

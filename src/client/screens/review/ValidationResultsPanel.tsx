@@ -56,7 +56,7 @@ function ExceptionCard(props: { exception: ExceptionView }): JSX.Element {
         {x.missing_information.length === 0 ? (
           <p>None</p>
         ) : (
-          <ul className={styles.missingList}>
+          <ul className={`usa-list ${styles.missingList}`}>
             {x.missing_information.map((mi, i) => (
               <li key={i}>
                 {mi.document_type ?? mi.field_path ?? mi.requirement}: {mi.requirement}{' '}
@@ -99,7 +99,7 @@ export function ValidationResultsPanel(props: {
         <div className={styles.resolvedDisclosure}>
           <button
             type="button"
-            className={styles.disclosureButton}
+            className={`usa-button usa-button--outline ${styles.disclosureButton}`}
             data-testid="resolved-exceptions-disclosure"
             aria-expanded={showResolved}
             onClick={() => setShowResolved((v) => !v)}

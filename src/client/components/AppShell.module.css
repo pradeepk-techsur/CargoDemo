@@ -1,0 +1,144 @@
+/*
+ * Shell chrome. Sizes come from the container and rem, never viewport units,
+ * because the app renders inside a preview iframe of unknown size.
+ */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  /* Grows to fill #root (a flex column of at least full height), which puts the
+     footer at the bottom on a short page rather than mid-screen. */
+  flex: 1 1 auto;
+}
+
+/* --- Header ---------------------------------------------------------------- */
+
+.header {
+  /* USWDS `usa-header--basic` supplies the white surface and type; the app adds
+     the agency-blue rule that separates chrome from content. */
+  border-bottom: 0.25rem solid var(--accent);
+  background: var(--surface);
+}
+
+.headerInner {
+  width: 100%;
+  max-width: var(--shell-max-width);
+  margin: 0 auto;
+  padding: var(--sp-3) var(--sp-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  /* Narrow containers stack the lockup above the meta block rather than
+     compressing the wordmark into unreadable fragments. */
+  flex-wrap: wrap;
+}
+
+.logo {
+  /* Neutralise the USWDS `usa-logo` margins; the flex container owns spacing. */
+  margin: 0;
+  min-width: 0;
+}
+
+.lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  text-decoration: none;
+  color: var(--text);
+}
+
+.lockup:hover .agencyName {
+  text-decoration: underline;
+}
+
+.marks {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: 0 0 auto;
+}
+
+/* Fixed height, automatic width: any aspect ratio of replacement artwork renders
+   undistorted. */
+.mark {
+  height: var(--logo-height);
+  width: auto;
+  display: block;
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.agencyName {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  color: var(--accent-darker);
+}
+
+.directorateName {
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--text-muted);
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.appTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.demoTag {
+  /* USWDS `usa-tag` defaults to base-dark; amber marks this as non-production
+     without relying on colour alone — the word "Demonstration" is the signal.
+     `--warn-fill` (USWDS `warning`), not `--warn`, so the dark tag text clears
+     AA at 10.4:1. */
+  background-color: var(--warn-fill);
+  color: var(--text);
+}
+
+/* --- Main ----------------------------------------------------------------- */
+
+.main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* --- Footer --------------------------------------------------------------- */
+
+.footer {
+  margin-top: var(--sp-6);
+  background: var(--accent-darker);
+  color: var(--text-inverse);
+}
+
+.footerInner {
+  width: 100%;
+  max-width: var(--shell-max-width);
+  margin: 0 auto;
+  padding: var(--sp-4) var(--sp-5);
+}
+
+.footerText {
+  margin: 0 0 var(--sp-1) 0;
+  font-size: 0.875rem;
+  color: var(--text-inverse);
+}
+
+.footerText:last-child {
+  margin-bottom: 0;
+  opacity: 0.85;
+}

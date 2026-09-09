@@ -37,7 +37,7 @@ export function DocumentsPanel(props: { documents: DocumentView[] }): JSX.Elemen
             >
               <span className={styles.documentName}>{doc.display_name}</span>
               <span
-                className={styles.documentStatus}
+                className={`usa-tag ${styles.documentStatus}`}
                 data-testid="document-status"
                 data-status={doc.status}
               >

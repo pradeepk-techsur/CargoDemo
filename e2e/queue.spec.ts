@@ -55,7 +55,10 @@ test.describe('Cargo Exception Queue', () => {
     await page
       .locator('[data-testid="queue-filter-status"]')
       .waitFor(); // filters mounted
-    await page.getByLabel('Clean entries').check();
+    // Scoped by role: the applied-filter chip's remove button is also named
+    // "...clean entries", so a bare getByLabel matches two elements once the
+    // chip renders. The role narrows this to the filter checkbox itself.
+    await page.getByRole('checkbox', { name: 'Clean entries' }).check();
     await expect(page.locator('[data-testid="queue-row-SHP-2026-0011"]')).toBeVisible();
   });
 
@@ -84,7 +87,8 @@ test.describe('Cargo Exception Queue', () => {
     const beforeCount = await page.locator('[data-testid="queue-row"]').count();
 
     // Select the INVALID_HTS_CODE exception-type filter ("Incomplete HTS").
-    await page.getByLabel('Incomplete HTS').check();
+    // Scoped by role — see the note above; the chip's remove button shares this name.
+    await page.getByRole('checkbox', { name: 'Incomplete HTS' }).check();
     await expect(page.locator('[data-testid="queue-applied-filters"]')).toBeVisible();
     await expect(page.locator('[data-testid="queue-table"]')).toBeVisible();
 

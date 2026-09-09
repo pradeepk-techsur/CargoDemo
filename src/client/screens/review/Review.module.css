@@ -1,16 +1,28 @@
-/* Shipment Review styles. Container-relative sizing only. */
+/*
+ * Shipment Review styles. Container-relative sizing only.
+ *
+ * USWDS now owns the form controls (`usa-input`, `usa-select`, `usa-textarea`,
+ * `usa-radio__input--tile`), the alerts, the buttons and the breadcrumb, so the
+ * rules that drew those by hand are gone. What remains is the screen layout, the
+ * entry-data field grid, the document list, the exception cards and the
+ * authorship bands — none of which USWDS models.
+ */
 
 .screen {
   width: 100%;
-  max-width: 1600px;
+  max-width: 1600px; /* narrower than the queue: two reading columns */
   margin: 0 auto;
   padding: var(--sp-5);
 }
 
-.backLink {
-  display: inline-block;
-  margin-bottom: var(--sp-3);
-  font-weight: 600;
+.breadcrumb {
+  /* USWDS pads the breadcrumb for a full-width page band; here it sits directly
+     above the case header inside the screen's own padding. */
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  margin-bottom: var(--sp-2);
+  background: transparent;
 }
 
 .caseHeader {
@@ -29,6 +41,30 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--sp-4);
+}
+
+.metaImporter {
+  font-weight: 700;
+}
+
+.metaValue {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* The priority derivation, on its own line at the full width of the header. */
+.priorityBasisLine {
+  margin: var(--sp-3) 0 0 0;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  max-width: 90ch;
+}
+
+.priorityBasisLabel {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .notFound {
@@ -117,14 +153,6 @@
 
 .documentName {
   font-weight: 600;
-}
-
-.documentStatus {
-  padding: 2px var(--sp-2);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  font-size: 0.8125rem;
-  white-space: nowrap;
 }
 
 .documentStatus[data-status='NOT_RECEIVED'] {
@@ -219,14 +247,6 @@
   margin-top: var(--sp-3);
 }
 
-.disclosureButton {
-  padding: var(--sp-2) var(--sp-3);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: var(--surface-sunken);
-  cursor: pointer;
-}
-
 /* Action panel */
 .actionRow {
   margin-top: var(--sp-4);
@@ -243,24 +263,6 @@
   display: grid;
   gap: var(--sp-3);
   margin-bottom: var(--sp-4);
-}
-
-.actionOption {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-3);
-}
-
-.actionUnavailable {
-  background: var(--surface-sunken);
-  opacity: 0.85;
-}
-
-.actionLabelRow {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-weight: 600;
 }
 
 .unavailableBadge {
@@ -288,12 +290,6 @@
   gap: var(--sp-3);
 }
 
-.innerFieldset {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-3);
-}
-
 .checkRow {
   display: flex;
   align-items: center;
@@ -307,76 +303,8 @@
   gap: var(--sp-1);
 }
 
-.select,
-.textInput {
-  padding: var(--sp-2);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: var(--surface);
-  font: inherit;
-  width: 100%;
-}
-
-/* Justification */
-.justificationBlock {
-  margin: var(--sp-4) 0;
-}
-
-.justificationLabel {
-  display: block;
-  font-weight: 600;
-  margin-bottom: var(--sp-1);
-}
-
-.justificationTextarea {
-  width: 100%;
-  padding: var(--sp-3);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  font: inherit;
-  resize: vertical;
-}
-
-.justificationCounter {
-  color: var(--text-muted);
-  font-size: 0.8125rem;
-  margin-top: var(--sp-1);
-}
-
-.justificationError {
-  color: var(--danger);
-  font-size: 0.8125rem;
-  margin-top: var(--sp-1);
-}
-
 /* Submit */
-.submitButton {
-  padding: var(--sp-3) var(--sp-5);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--accent);
-  color: var(--text-inverse);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.submitButton:disabled {
-  cursor: not-allowed;
-  background: var(--surface-sunken);
-  color: var(--text-muted);
-  border-color: var(--border);
-}
-
 /* Confirmation & error */
-.confirmation {
-  border: 1px solid var(--ok);
-  border-left: 3px solid var(--ok);
-  border-radius: var(--radius);
-  background: #f0f8f2;
-  padding: var(--sp-4);
-  margin-bottom: var(--sp-4);
-}
-
 .humanBand {
   border-left: 3px solid var(--band-human-border);
   background: var(--band-human-surface);
@@ -387,15 +315,6 @@
 .quotedJustification {
   margin: 0 0 var(--sp-2) 0;
   white-space: pre-wrap;
-}
-
-.actionError {
-  border: 1px solid var(--danger);
-  border-left: 3px solid var(--danger);
-  border-radius: var(--radius);
-  background: #fdf3f1;
-  padding: var(--sp-4);
-  margin-bottom: var(--sp-4);
 }
 
 .errorRef {
@@ -409,4 +328,97 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface-sunken);
+}
+
+/* --- Action options (USWDS tile radios) ----------------------------------- */
+/*
+ * `usa-radio__input--tile` draws the bordered tile and its selected state. These
+ * rules only handle what the tile variant does not model: the unavailable state
+ * and the label's two-part layout (action name on the left, UNAVAILABLE marker
+ * pushed right).
+ */
+
+.actionOption {
+  /* The nested per-action fields render inside this wrapper when selected. */
+  min-width: 0;
+}
+
+/* An unavailable action is signalled three ways at once — muted tile, the word
+   UNAVAILABLE, and the lock glyph — never by colour alone, and its reason is a
+   paragraph in the layout rather than a tooltip. */
+.actionUnavailable :global(.usa-radio__label) {
+  background: var(--surface-sunken);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.actionLabelRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-weight: 600;
+}
+
+.actionLabelText {
+  min-width: 0;
+}
+
+.unavailableBadge {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* The reason sits under the tile, indented to the tile's text column. */
+.reasonText {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  margin: var(--sp-1) 0 0 var(--sp-2);
+}
+
+/* --- Document status tag -------------------------------------------------- */
+/*
+ * A missing document is the FINDING, so it is styled as an error tag rather than
+ * a neutral one. The label text ("Not received") carries the meaning; colour only
+ * reinforces it.
+ */
+
+.documentStatus {
+  text-transform: none;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.documentStatus[data-status='NOT_RECEIVED'] {
+  background-color: var(--danger);
+  color: var(--text-inverse);
+}
+
+/* --- Alert-block spacing -------------------------------------------------- */
+
+.confirmation,
+.actionError {
+  margin-bottom: var(--sp-4);
+}
+
+.errorRef {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.submitButton {
+  margin-top: var(--sp-2);
+}
+
+.disclosureButton {
+  margin-bottom: var(--sp-3);
+}
+
+/* --- Justification group -------------------------------------------------- */
+
+.justificationBlock {
+  margin: var(--sp-4) 0;
 }

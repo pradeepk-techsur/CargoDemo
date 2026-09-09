@@ -39,13 +39,29 @@ export function QueueTable(props: {
     }
   }
 
-  const ariaSortFor = (field: string): 'ascending' | 'descending' | 'none' => {
-    if (field !== props.sortField) return 'none';
+  /**
+   * `aria-sort` is emitted ONLY for the column actually in effect, and omitted
+   * entirely elsewhere — an absent attribute already means "not sorted by this
+   * column". Two reasons this is not `'none'`:
+   *
+   *  - Semantics: `aria-sort="none"` advertises a column as sortable-but-unsorted.
+   *    These headers are not controls; sorting is driven by the sidebar select.
+   *    Claiming otherwise sends keyboard users hunting for a control that is not
+   *    there.
+   *  - Rendering: USWDS styles `.usa-table thead th[aria-sort]` with a cyan
+   *    highlight to mark THE sorted column. Emitting `none` on the rest would
+   *    highlight four of seven headers and destroy the signal.
+   */
+  const ariaSortFor = (field: string): 'ascending' | 'descending' | undefined => {
+    if (field !== props.sortField) return undefined;
     return props.sortDirection === 'asc' ? 'ascending' : 'descending';
   };
 
   return (
-    <table className={styles.table} data-testid="queue-table">
+    <table
+      className={`usa-table usa-table--borderless ${styles.table}`}
+      data-testid="queue-table"
+    >
       <caption className="visually-hidden">
         Flagged cargo shipments. Activate a row to review the shipment.
       </caption>

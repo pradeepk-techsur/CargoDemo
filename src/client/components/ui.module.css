@@ -1,4 +1,11 @@
-/* Shared component kit styles. Container-relative sizing only. */
+/*
+ * Shared component kit styles. Container-relative sizing only.
+ *
+ * USWDS now owns the alert, tag and button surfaces (see ui.tsx), so the rules
+ * that used to draw them by hand are gone. What remains is the panel chrome and
+ * the two bespoke indicators — StatusBadge and PriorityIndicator — which encode
+ * their value by shape and glyph and have no USWDS equivalent.
+ */
 
 .panel {
   background: var(--surface);
@@ -11,15 +18,17 @@
 .panelHeader {
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: var(--sp-3);
   margin-bottom: var(--sp-3);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--accent);
   padding-bottom: var(--sp-2);
 }
 
 .panelTitle {
   margin: 0;
   font-size: 1.125rem;
+  font-weight: 700;
 }
 
 .panelCount {
@@ -40,7 +49,8 @@
   font-size: 0.9rem;
 }
 
-/* Status badge — text label + distinct shape, never colour alone. */
+/* --- Status badge — text label + distinct shape, never colour alone --------- */
+
 .statusBadge {
   display: inline-flex;
   align-items: center;
@@ -50,6 +60,7 @@
   border-radius: 999px;
   font-size: 0.8125rem;
   font-weight: 600;
+  background: var(--surface);
   /* Long labels ("Awaiting information") wrap inside the pill rather than
      stretching it past its column. */
   white-space: normal;
@@ -64,7 +75,7 @@
   background: var(--text);
 }
 
-/* Distinct shapes per status class */
+/* Distinct shapes per status class. */
 .shapeNew {
   border-radius: 50%;
 }
@@ -92,9 +103,10 @@
   background: var(--ok);
 }
 
-/* Priority indicator — label row on one line, basis stacked beneath it so a
-   long derivation string can never overflow its container and overlay the
-   neighbouring content. */
+/* --- Priority indicator ---------------------------------------------------- */
+/* Label row on one line, basis stacked beneath it so a long derivation string can
+   never overflow its container and overlay the neighbouring content. */
+
 .priority {
   display: inline-flex;
   flex-direction: column;
@@ -115,10 +127,14 @@
 .priorityGlyph {
   font-family: var(--font-mono);
   letter-spacing: 1px;
+  /* The rank bars are a compact indicator, not body copy. At the USWDS 1.06rem
+     body size four bars in Roboto Mono cost ~45px, which pushed the "Critical"
+     label past the edge of the queue's Priority column. */
+  font-size: 0.8125rem;
 }
 
 .priorityLabel {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .priorityBasis {
@@ -129,65 +145,46 @@
   overflow-wrap: anywhere;
 }
 
-/* Exception type chip */
+/* --- Exception type chip --------------------------------------------------- */
+/* Rendered as a `usa-tag`; these are the only deviations from the USWDS default.
+   USWDS tags uppercase their text, which mangles the exception-type labels, and
+   the queue packs several into one cell. */
+
 .chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-1);
-  padding: 2px var(--sp-2);
-  margin: 2px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  font-size: 0.8125rem;
-  background: var(--surface-sunken);
+  margin: 2px 2px 2px 0;
+  text-transform: none;
   white-space: nowrap;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .chipCount {
   font-weight: 700;
 }
 
-/* Error panel */
-.errorPanel {
-  border: 1px solid var(--danger);
-  border-left: 3px solid var(--danger);
-  border-radius: var(--radius);
-  background: #fdf3f1;
-  padding: var(--sp-4);
-}
-
-.errorMessage {
-  color: var(--text);
-  margin: 0 0 var(--sp-2) 0;
-}
+/* --- Alert adjustments ----------------------------------------------------- */
 
 .errorRef {
-  color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
 }
 
-.retryButton {
-  margin-top: var(--sp-3);
-  padding: var(--sp-2) var(--sp-4);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: var(--surface);
-  cursor: pointer;
-}
-
-/* Empty state */
+/* The queue's empty state is a centred notice, not a left-aligned page alert. */
 .emptyState {
-  padding: var(--sp-5);
-  text-align: center;
-  color: var(--text-muted);
+  margin: 0;
 }
 
-/* Skeleton — reserves final dimensions, never a collapsing spinner. */
+/* --- Skeleton — reserves final dimensions, never a collapsing spinner ------ */
+
 .skeleton {
-  background: linear-gradient(90deg, #eceff2 25%, #f4f6f8 50%, #eceff2 75%);
+  background: linear-gradient(
+    90deg,
+    var(--surface-sunken) 25%,
+    #f8f8f8 50%,
+    var(--surface-sunken) 75%
+  );
   background-size: 200% 100%;
-  border-radius: 4px;
+  border-radius: var(--radius);
   animation: shimmer 1.4s ease-in-out infinite;
 }
 

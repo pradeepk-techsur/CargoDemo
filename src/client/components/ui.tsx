@@ -1,9 +1,18 @@
 /**
  * The shared component kit — one module so the file count stays reviewable.
  *
- * StatusBadge and PriorityIndicator always convey meaning by text label plus a
- * shape or glyph, never by colour alone. Skeleton reserves the final layout
- * dimensions, never a centred spinner that collapses to zero height.
+ * Built on USWDS component classes wherever USWDS defines the pattern:
+ * ExceptionTypeChip is a `usa-tag`, ErrorPanel is a `usa-alert--error`, and
+ * EmptyState is a `usa-alert--info`.
+ *
+ * StatusBadge and PriorityIndicator stay bespoke on purpose. USWDS has no status
+ * component that encodes a value by SHAPE, and these two must convey meaning by
+ * text label plus a shape or glyph, never by colour alone — seven case statuses
+ * rendered as seven colours of `usa-tag` would fail that. They are drawn with the
+ * USWDS palette via the token bridge.
+ *
+ * Skeleton reserves the final layout dimensions, never a centred spinner that
+ * collapses to zero height.
  */
 
 import type { ReactNode } from 'react';
@@ -135,7 +144,7 @@ export function ExceptionTypeChip(props: {
 }): JSX.Element {
   return (
     <span
-      className={styles.chip}
+      className={`usa-tag ${styles.chip}`}
       data-testid={props.testId}
       data-exception-type={props.type}
     >
@@ -156,15 +165,28 @@ export function ErrorPanel(props: {
   children?: ReactNode;
 }): JSX.Element {
   return (
-    <div className={styles.errorPanel} role="alert" data-testid={props.testId}>
-      <p className={styles.errorMessage}>{props.error.message}</p>
-      <p className={styles.errorRef}>Reference: {props.error.request_id}</p>
-      {props.children}
-      {props.onRetry ? (
-        <button type="button" className={styles.retryButton} onClick={props.onRetry}>
-          Retry
-        </button>
-      ) : null}
+    <div
+      className="usa-alert usa-alert--error"
+      role="alert"
+      data-testid={props.testId}
+    >
+      <div className="usa-alert__body">
+        <h3 className="usa-alert__heading">Something went wrong</h3>
+        <p className="usa-alert__text">{props.error.message}</p>
+        <p className={`usa-alert__text ${styles.errorRef}`}>
+          Reference: {props.error.request_id}
+        </p>
+        {props.children}
+        {props.onRetry ? (
+          <button
+            type="button"
+            className="usa-button usa-button--outline"
+            onClick={props.onRetry}
+          >
+            Retry
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -177,9 +199,14 @@ export function EmptyState(props: {
   action?: ReactNode;
 }): JSX.Element {
   return (
-    <div className={styles.emptyState} data-testid={props.testId}>
-      <p>{props.message}</p>
-      {props.action}
+    <div
+      className={`usa-alert usa-alert--info ${styles.emptyState}`}
+      data-testid={props.testId}
+    >
+      <div className="usa-alert__body">
+        <p className="usa-alert__text">{props.message}</p>
+        {props.action}
+      </div>
     </div>
   );
 }

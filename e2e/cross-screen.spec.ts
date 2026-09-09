@@ -122,24 +122,53 @@ test.describe.serial('cross-screen — submit, propagate, reject', () => {
   });
 
   test('no orphan navigation — every href resolves to a served route', async ({ page }) => {
+    /**
+     * Two kinds of link are legitimate, and both are checked:
+     *
+     *  - ROUTE links must address one of the two served routes, so no control can
+     *    navigate to a deferred screen.
+     *  - IN-PAGE FRAGMENT links (the shell's WCAG 2.4.1 "Skip to main content")
+     *    are not route navigation at all. They are held to the equivalent
+     *    standard for their own kind: the element they target must exist on the
+     *    page, or the link is just as orphaned as a bad route.
+     */
+    const collect = () =>
+      page.evaluate(() =>
+        [...document.querySelectorAll('a[href]')].map((a) => {
+          const href = a.getAttribute('href') ?? '';
+          return {
+            href,
+            fragmentTargetExists: href.startsWith('#')
+              ? Boolean(document.getElementById(href.slice(1)))
+              : null,
+          };
+        }),
+      );
+
+    const assertAll = (links: Awaited<ReturnType<typeof collect>>) => {
+      for (const link of links) {
+        if (link.href.startsWith('#')) {
+          expect(
+            link.fragmentTargetExists,
+            `in-page link ${link.href} points at no element on this page`,
+          ).toBe(true);
+          continue;
+        }
+        expect(
+          link.href === '/' || /^\/shipments\/[^/]+$/.test(link.href),
+          `unexpected route href: ${link.href}`,
+        ).toBe(true);
+      }
+    };
+
     // Queue.
     await page.goto('/');
     await expect(page.locator('[data-testid="queue-table"]')).toBeVisible();
-    let hrefs = await page.evaluate(() =>
-      [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')),
-    );
-    for (const href of hrefs) {
-      expect(href === '/' || /^\/shipments\/[^/]+$/.test(href ?? '')).toBe(true);
-    }
+    assertAll(await collect());
 
     // Review.
     await page.goto('/shipments/SHP-2026-0007');
     await expect(page.locator('[data-testid="review-screen"]')).toBeVisible();
-    hrefs = await page.evaluate(() =>
-      [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')),
-    );
-    for (const href of hrefs) {
-      expect(href === '/' || /^\/shipments\/[^/]+$/.test(href ?? '')).toBe(true);
-    }
+    assertAll(await collect());
   });
 });

@@ -1,8 +1,20 @@
-/* Cargo Exception Queue styles. Container-relative sizing only. */
+/*
+ * Cargo Exception Queue styles. Container-relative sizing only.
+ *
+ * The table is a USWDS `usa-table usa-table--borderless`, so USWDS owns its
+ * typography, cell padding and header rule. What stays here is everything USWDS
+ * does not model: the two-column screen layout, the fixed column widths, and the
+ * clickable-row affordance.
+ *
+ * The column widths and the `min-width` floor are load-bearing, not cosmetic —
+ * they are what stops the long `priority_basis_summary` string from overflowing
+ * the Priority cell and painting across Status, Age and Value. Do not change one
+ * without re-checking the others: they must keep summing to 100%.
+ */
 
 .screen {
   width: 100%;
-  max-width: 1920px;
+  max-width: var(--shell-max-width);
   margin: 0 auto;
   padding: var(--sp-5);
 }
@@ -30,7 +42,8 @@
   }
 }
 
-/* Filters */
+/* --- Filters -------------------------------------------------------------- */
+
 .filters {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -38,38 +51,23 @@
   padding: var(--sp-4);
 }
 
-.fieldset {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-3);
-  margin: 0 0 var(--sp-4) 0;
-}
-
-.legend {
-  font-weight: 600;
-  padding: 0 var(--sp-1);
-}
-
-.checkboxRow {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-bottom: var(--sp-1);
-}
-
-.selectRow {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-1);
+/* USWDS `usa-fieldset` carries no visible boundary; the sidebar stacks four of
+   them, so each needs a separating rule to read as a distinct group. */
+.filters :global(.usa-fieldset) {
+  padding-bottom: var(--sp-3);
   margin-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--border);
 }
 
-.select {
-  padding: var(--sp-1) var(--sp-2);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: var(--surface);
+.filters :global(.usa-legend) {
+  font-weight: 700;
+  margin-top: 0;
 }
+
+/* NOTE: the checkbox label's `margin-top` is deliberately NOT overridden here.
+   app.css positions the (invisible, hit-testable) native input from that exact
+   value, so changing it in one place only would drift the hit target away from
+   the box the user sees. */
 
 .appliedFilters {
   display: flex;
@@ -82,30 +80,31 @@
   display: inline-flex;
   align-items: center;
   gap: var(--sp-1);
-  padding: 2px var(--sp-2);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: var(--surface-sunken);
-  font-size: 0.8125rem;
+  text-transform: none;
+  white-space: normal;
+  text-align: left;
 }
 
 .removeChip {
-  border: none;
-  background: transparent;
-  cursor: pointer;
+  /* `usa-button--unstyled` colours links blue; inside a dark chip it must inherit
+     the chip's own foreground to stay legible. */
+  color: inherit;
   font-weight: 700;
-  padding: 0 2px;
+  line-height: 1;
+  padding: 0 0 0 var(--sp-1);
+  text-decoration: none;
+}
+
+.removeChip:hover {
+  color: inherit;
 }
 
 .clearAll {
-  padding: var(--sp-2) var(--sp-3);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: var(--surface);
-  cursor: pointer;
+  margin-bottom: var(--sp-4);
 }
 
-/* Table */
+/* --- Table ---------------------------------------------------------------- */
+
 .tableWrap {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -113,8 +112,12 @@
   overflow: hidden;
 }
 
+/* Horizontal overflow is confined to this element, which is why the body-level
+   `overflow-x: hidden` USWDS sets could be neutralised in app.css. USWDS's own
+   `usa-table-container--scrollable` supplies no overflow-x, so it is set here. */
 .tableScroll {
   overflow-x: auto;
+  margin: 0;
 }
 
 .table {
@@ -123,42 +126,78 @@
      1280px viewport (~926px) so the common laptop width needs no horizontal
      scroll; genuinely narrow containers scroll rather than crush cells. */
   min-width: 55rem;
-  border-collapse: collapse;
   table-layout: fixed;
+  /* USWDS `usa-table` ships a 1.25rem block margin; the wrapper owns spacing. */
+  margin: 0;
 }
 
 .table thead th {
-  text-align: left;
   padding: var(--sp-3);
   border-bottom: 2px solid var(--border-strong);
   font-size: 0.8125rem;
   text-transform: uppercase;
   letter-spacing: 0.02em;
   color: var(--text-muted);
+  background: var(--surface-sunken);
+  vertical-align: bottom;
 }
 
-/* Widths sum to exactly 100% so `table-layout: fixed` does not rescale them. */
-.colShipment {
-  width: 14%;
+/* The column currently in effect. USWDS marks the sorted column with a cyan fill
+   on `th[aria-sort]`, which this header style overrides; the same information is
+   restored here so sighted users get what `aria-sort` gives screen readers.
+   The direction caret is supplementary — `aria-sort` is the accessible channel. */
+.table thead th[aria-sort] {
+  background: var(--info-surface);
+  color: var(--text);
+  box-shadow: inset 0 -3px 0 var(--accent);
 }
-.colImporter {
+
+.table thead th[aria-sort='ascending']::after {
+  content: ' \25B2';
+}
+
+.table thead th[aria-sort='descending']::after {
+  content: ' \25BC';
+}
+
+/*
+ * Widths sum to exactly 100% so `table-layout: fixed` does not rescale them.
+ *
+ * These are not guesses. They were set from measured content: at the narrowest
+ * desktop the table is 926px, and each column's allocation less its 24px padding
+ * exceeds the widest unbreakable text run any cell in it renders, with headroom.
+ * The uppercase 0.8125rem header label is part of that requirement. If you change
+ * a width, re-measure — the Priority/Status/Value trio is where surplus lives and
+ * Shipment ID and Importer are where it is needed.
+ */
+.colShipment {
+  /* Holds "SHP-2026-0007" on ONE line in the mono face: a wrapped identifier
+     reads as two shipments. USWDS's Roboto Mono is wider than the previous
+     system stack, which is why this needs more than it used to. */
   width: 17%;
 }
-.colExceptions {
+.colImporter {
+  /* The longest importer names ("Autobrake Distribution Corp") wrap to two
+     lines here rather than overflowing into Exception(s). */
   width: 19%;
 }
+.colExceptions {
+  width: 16%;
+}
 .colPriority {
-  /* Wide enough for the rank glyph plus "Critical" on one line. */
+  /* Wide enough for the rank glyph, the gap and "Critical" as ONE unbroken
+     inline-flex run — the glyph and the label are a single nowrap unit, so this
+     column's requirement is their combined width, not the label alone. */
   width: 15%;
 }
 .colStatus {
-  width: 16%;
+  width: 14%;
 }
 .colAge {
-  width: 6%;
+  width: 7%;
 }
 .colValue {
-  width: 13%;
+  width: 12%;
 }
 
 /* Age and money are single tokens — they must never break mid-number. */
@@ -168,24 +207,35 @@
 
 .row {
   cursor: pointer;
-  border-bottom: 1px solid var(--border);
 }
 
-.row:hover {
+.row:hover td {
   background: var(--surface-sunken);
 }
 
 .row td {
   padding: var(--sp-3);
   vertical-align: top;
+  border-top: 1px solid var(--border);
+  border-bottom: 0;
   /* Fixed columns: long unbroken content wraps inside its own cell rather than
-     spilling over the next column. */
+     spilling over the next column. `white-space` is asserted explicitly, not
+     left to the default — a single inherited `nowrap` from any table component
+     class turns every one of these cells into an overflow that paints across the
+     next column, which is exactly what `usa-table-container--scrollable` did. */
+  white-space: normal;
   overflow-wrap: break-word;
 }
 
 .shipmentId {
   font-family: var(--font-mono);
-  font-weight: 600;
+  font-weight: 700;
+  /* Never break an identifier across lines. Because it cannot wrap, the column
+     must be wide enough for it outright — see .colShipment. */
+  white-space: nowrap;
+  /* One step below body size. Roboto Mono at the USWDS 1.06rem body size makes a
+     13-character identifier wider than any reasonable share of the table. */
+  font-size: 0.9375rem;
 }
 
 .exceptionsCell {
@@ -201,24 +251,18 @@
   margin-left: var(--sp-1);
 }
 
+/* --- Pagination ----------------------------------------------------------- */
+
 .pagination {
-  display: flex;
+  /* USWDS `usa-pagination` centres its list; this variant is a three-item row of
+     Previous / status / Next. */
   align-items: center;
   gap: var(--sp-3);
   padding: var(--sp-3);
-  justify-content: flex-end;
+  margin: 0;
+  flex-wrap: wrap;
 }
 
-.pageButton {
-  padding: var(--sp-1) var(--sp-3);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: var(--surface);
-  cursor: pointer;
-}
-
-.pageButton:disabled {
-  cursor: not-allowed;
+.pageStatus {
   color: var(--text-muted);
-  opacity: 0.6;
 }

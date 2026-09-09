@@ -259,23 +259,54 @@ test.describe.serial('primary journey — flagged queue to a justified, propagat
   });
 
   test('Stage 6 — integrity guards', async () => {
-    // No dead nav target (runtime half) — on the queue.
-    let hrefs = await page.evaluate(() =>
-      [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')),
-    );
-    for (const href of hrefs) {
-      expect(href === '/' || /^\/shipments\/[^/]+$/.test(href ?? '')).toBe(true);
-    }
+    /**
+     * No dead nav target. Two kinds of link are legitimate and each is held to
+     * the equivalent standard:
+     *
+     *  - ROUTE links must address one of the two served routes, so nothing can
+     *    navigate to a deferred screen.
+     *  - IN-PAGE FRAGMENT links (the shell's WCAG 2.4.1 "Skip to main content")
+     *    are not route navigation; the element they target must exist, or the
+     *    link is just as dead as a bad route.
+     */
+    const collectLinks = () =>
+      page.evaluate(() =>
+        [...document.querySelectorAll('a[href]')].map((a) => {
+          const href = a.getAttribute('href') ?? '';
+          return {
+            href,
+            fragmentTargetExists: href.startsWith('#')
+              ? Boolean(document.getElementById(href.slice(1)))
+              : null,
+          };
+        }),
+      );
+
+    const assertNoDeadLinks = (
+      links: Awaited<ReturnType<typeof collectLinks>>,
+    ) => {
+      for (const link of links) {
+        if (link.href.startsWith('#')) {
+          expect(
+            link.fragmentTargetExists,
+            `in-page link ${link.href} points at no element on this page`,
+          ).toBe(true);
+          continue;
+        }
+        expect(
+          link.href === '/' || /^\/shipments\/[^/]+$/.test(link.href),
+          `unexpected route href: ${link.href}`,
+        ).toBe(true);
+      }
+    };
+
+    // On the queue.
+    assertNoDeadLinks(await collectLinks());
 
     // And on the review screen.
     await page.goto(`/shipments/${CANONICAL}`);
     await expect(page.locator('[data-testid="review-screen"]')).toBeVisible();
-    hrefs = await page.evaluate(() =>
-      [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')),
-    );
-    for (const href of hrefs) {
-      expect(href === '/' || /^\/shipments\/[^/]+$/.test(href ?? '')).toBe(true);
-    }
+    assertNoDeadLinks(await collectLinks());
 
     // An unknown shipment renders the not-found view with a working back link,
     // not a blank page or a crash.

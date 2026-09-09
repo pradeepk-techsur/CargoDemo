@@ -99,7 +99,23 @@ function sleep(ms) {
 // --- static client-link scan -------------------------------------------------
 
 const LINK_RE = /\b(?:to|href)=["'](\/[^"']*)["']/g;
-const ABSOLUTE_RE = /https?:\/\//;
+
+/**
+ * An absolute URL only breaks the same-origin preview where the browser would
+ * actually FETCH it, so this matches URL-bearing positions rather than any
+ * occurrence of the scheme on a line. Matching bare text produced false
+ * positives that had nothing to do with loading anything:
+ *
+ *  - prose that mentions a scheme — the USWDS government banner's own copy
+ *    ("A lock or https:// means you've safely connected"),
+ *  - `xmlns="http://www.w3.org/2000/svg"`, the namespace IDENTIFIER every
+ *    standalone SVG file is required to declare and which is never resolved.
+ *
+ * Real violations — `src="https://cdn…"`, `url('https://fonts…')`,
+ * `from 'https://…'`, `fetch('http://…')` — are all still caught.
+ */
+const ABSOLUTE_RE =
+  /(?:\b(?:src|srcset|href|action|poster|data|content|formaction)\s*=\s*["']|\burl\(\s*["']?|\bfrom\s+["']|\bimport\(\s*["']|\bfetch\(\s*["']|\bnew\s+URL\(\s*["'])https?:\/\//i;
 
 function scanClientLinks() {
   const clientDir = join(ROOT, 'src', 'client');

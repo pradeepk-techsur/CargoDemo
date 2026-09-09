@@ -8,11 +8,18 @@
  * The submit control is disabled until every required field including the
  * justification minimum is valid.
  *
+ * The five options are USWDS tile radios (`usa-radio__input--tile`), which give
+ * each action its own bordered target and a clear selected state. That contract is
+ * structural: `usa-radio__input` moves the native input out of view and the
+ * control is drawn by the pseudo-elements of an ADJACENT SIBLING label bound by
+ * id — a label-wrapped input renders no visible radio at all. Ids come from
+ * `useId()` so two panels on one page cannot collide.
+ *
  * There is no approve/reject control and no authority rail — the approval chain is
  * deferred and out of scope.
  */
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 
 import type {
@@ -89,6 +96,7 @@ export function ActionPanel(props: {
 }): JSX.Element {
   const { shipment, availableActions, exceptions } = props;
   const caseId = shipment.case_id;
+  const uid = useId();
   const [selected, setSelected] = useState<UserAction | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
   const submit = useSubmitAction(caseId, shipment.shipment_id);
@@ -253,24 +261,26 @@ export function ActionPanel(props: {
 
       {result ? (
         <div
-          className={styles.confirmation}
+          className={`usa-alert usa-alert--success ${styles.confirmation}`}
           data-testid="action-confirmation"
           role="status"
           aria-live="polite"
         >
-          <p>
-            Recorded <strong>{actionLabel(result.action)}</strong>.
-          </p>
-          <p>
-            Status changed: {statusLabel(result.status.before)} →{' '}
-            <strong>{statusLabel(result.status.after)}</strong>
-          </p>
-          <blockquote className={styles.humanBand}>
-            <p className={styles.quotedJustification}>{result.justification}</p>
-            <footer>
-              — {result.acting_user.name} ({result.acting_user.role})
-            </footer>
-          </blockquote>
+          <div className="usa-alert__body">
+            <h3 className="usa-alert__heading">
+              Recorded {actionLabel(result.action)}
+            </h3>
+            <p className="usa-alert__text">
+              Status changed: {statusLabel(result.status.before)} →{' '}
+              <strong>{statusLabel(result.status.after)}</strong>
+            </p>
+            <blockquote className={styles.humanBand}>
+              <p className={styles.quotedJustification}>{result.justification}</p>
+              <footer>
+                — {result.acting_user.name} ({result.acting_user.role})
+              </footer>
+            </blockquote>
+          </div>
         </div>
       ) : null}
 
@@ -280,27 +290,33 @@ export function ActionPanel(props: {
             const meta = actionsByCode.get(action);
             const available = meta?.available ?? false;
             const isSelected = selected === action;
+            const inputId = `${uid}-${action}`;
+            const reasonId = `${uid}-reason-${action}`;
             return (
               <div
                 key={action}
-                className={`${styles.actionOption} ${available ? '' : styles.actionUnavailable}`}
+                className={`usa-radio ${styles.actionOption} ${
+                  available ? '' : styles.actionUnavailable
+                }`}
                 data-testid={`action-option-${action}`}
                 data-available={available ? 'true' : 'false'}
               >
-                <label className={styles.actionLabelRow}>
-                  <input
-                    type="radio"
-                    name="action"
-                    value={action}
-                    checked={isSelected}
-                    disabled={!available}
-                    aria-disabled={!available}
-                    aria-describedby={
-                      !available ? `reason-${action}` : undefined
-                    }
-                    onChange={() => selectAction(action)}
-                  />
-                  <span>{actionLabel(action)}</span>
+                <input
+                  className="usa-radio__input usa-radio__input--tile"
+                  id={inputId}
+                  type="radio"
+                  name="action"
+                  value={action}
+                  checked={isSelected}
+                  disabled={!available}
+                  aria-describedby={!available ? reasonId : undefined}
+                  onChange={() => selectAction(action)}
+                />
+                <label
+                  className={`usa-radio__label ${styles.actionLabelRow}`}
+                  htmlFor={inputId}
+                >
+                  <span className={styles.actionLabelText}>{actionLabel(action)}</span>
                   {!available ? (
                     <span className={styles.unavailableBadge}>
                       <span aria-hidden="true">🔒</span> UNAVAILABLE
@@ -309,7 +325,7 @@ export function ActionPanel(props: {
                 </label>
                 {!available && meta?.reason_text ? (
                   <p
-                    id={`reason-${action}`}
+                    id={reasonId}
                     className={`${styles.reasonText} reason-text`}
                     data-testid="action-unavailable-reason"
                   >
@@ -336,27 +352,39 @@ export function ActionPanel(props: {
         ) : null}
 
         {error ? (
-          <div className={styles.actionError} data-testid="action-error" role="alert">
-            <p>{error.message}</p>
-            <p className={styles.errorRef}>Reference: {error.request_id}</p>
-            {error.field_errors && error.field_errors.length ? (
-              <ul>
-                {error.field_errors.map((fe, i) => (
-                  <li key={i}>
-                    {fe.path}: {fe.message}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            {error.code === 'CASE_VERSION_CONFLICT' ? (
-              <p>The case changed since you loaded it. It has been refreshed — please review and resubmit.</p>
-            ) : null}
+          <div
+            className={`usa-alert usa-alert--error ${styles.actionError}`}
+            data-testid="action-error"
+            role="alert"
+          >
+            <div className="usa-alert__body">
+              <h3 className="usa-alert__heading">Could not record the decision</h3>
+              <p className="usa-alert__text">{error.message}</p>
+              <p className={`usa-alert__text ${styles.errorRef}`}>
+                Reference: {error.request_id}
+              </p>
+              {error.field_errors && error.field_errors.length ? (
+                <ul className="usa-list">
+                  {error.field_errors.map((fe, i) => (
+                    <li key={i}>
+                      {fe.path}: {fe.message}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              {error.code === 'CASE_VERSION_CONFLICT' ? (
+                <p className="usa-alert__text">
+                  The case changed since you loaded it. It has been refreshed —
+                  please review and resubmit.
+                </p>
+              ) : null}
+            </div>
           </div>
         ) : null}
 
         <button
           type="submit"
-          className={styles.submitButton}
+          className={`usa-button usa-button--big ${styles.submitButton}`}
           data-testid="action-submit"
           disabled={!canSubmit}
         >
@@ -371,8 +399,8 @@ export function ActionPanel(props: {
       case 'REQUEST_INFORMATION':
         return (
           <div data-testid="field-document-types" className={styles.fieldBlock}>
-            <fieldset className={styles.innerFieldset}>
-              <legend>Document types</legend>
+            <fieldset className="usa-fieldset">
+              <legend className="usa-legend">Document types</legend>
               {missingDocTypes.length === 0 ? (
                 <p className={styles.reasonText}>
                   No missing document types on the open exceptions.
@@ -405,7 +433,7 @@ export function ActionPanel(props: {
               {form.justifyUnlisted ? (
                 <input
                   type="text"
-                  className={styles.textInput}
+                  className="usa-input"
                   placeholder="OTHER_DOCUMENT_TYPE"
                   value={form.otherDocumentType}
                   onChange={(e) => patch({ otherDocumentType: e.target.value })}
@@ -416,7 +444,7 @@ export function ActionPanel(props: {
               Requested from (descriptive only — nothing is transmitted)
               <input
                 type="text"
-                className={styles.textInput}
+                className="usa-input"
                 value={form.requestedFrom}
                 onChange={(e) => patch({ requestedFrom: e.target.value })}
               />
@@ -425,7 +453,7 @@ export function ActionPanel(props: {
               Due by (informational only)
               <input
                 type="date"
-                className={styles.textInput}
+                className="usa-input"
                 value={form.dueBy}
                 onChange={(e) => patch({ dueBy: e.target.value })}
               />
@@ -439,7 +467,7 @@ export function ActionPanel(props: {
               Assign to (optional — leave blank if unknown)
               <input
                 type="text"
-                className={styles.textInput}
+                className="usa-input"
                 value={form.assignTo}
                 onChange={(e) => patch({ assignTo: e.target.value })}
               />
@@ -452,7 +480,7 @@ export function ActionPanel(props: {
             <label className={styles.selectRow}>
               Resolution basis
               <select
-                className={styles.select}
+                className="usa-select"
                 value={form.resolutionBasis}
                 onChange={(e) =>
                   patch({ resolutionBasis: e.target.value as FormState['resolutionBasis'] })
@@ -488,7 +516,7 @@ export function ActionPanel(props: {
             <label className={styles.selectRow}>
               Hold reason
               <select
-                className={styles.select}
+                className="usa-select"
                 value={form.holdReason}
                 onChange={(e) =>
                   patch({ holdReason: e.target.value as FormState['holdReason'] })
@@ -503,7 +531,7 @@ export function ActionPanel(props: {
             </label>
             {form.holdReason === 'OTHER' ? (
               <textarea
-                className={styles.textInput}
+                className="usa-textarea"
                 placeholder="Detail (required, 10-500 chars)"
                 value={form.holdReasonDetail}
                 onChange={(e) => patch({ holdReasonDetail: e.target.value })}
@@ -513,7 +541,7 @@ export function ActionPanel(props: {
               Review by (informational only)
               <input
                 type="date"
-                className={styles.textInput}
+                className="usa-input"
                 value={form.reviewBy}
                 onChange={(e) => patch({ reviewBy: e.target.value })}
               />
@@ -526,7 +554,7 @@ export function ActionPanel(props: {
             <label className={styles.selectRow}>
               Escalation reason
               <select
-                className={styles.select}
+                className="usa-select"
                 value={form.escalationReason}
                 onChange={(e) =>
                   patch({ escalationReason: e.target.value as FormState['escalationReason'] })
@@ -541,7 +569,7 @@ export function ActionPanel(props: {
             </label>
             {form.escalationReason === 'OTHER' ? (
               <textarea
-                className={styles.textInput}
+                className="usa-textarea"
                 placeholder="Detail (required, 10-500 chars)"
                 value={form.escalationReasonDetail}
                 onChange={(e) => patch({ escalationReasonDetail: e.target.value })}
@@ -551,7 +579,7 @@ export function ActionPanel(props: {
               Escalate to (optional supervisor user id)
               <input
                 type="text"
-                className={styles.textInput}
+                className="usa-input"
                 value={form.escalateTo}
                 onChange={(e) => patch({ escalateTo: e.target.value })}
               />

@@ -285,7 +285,9 @@ test.describe('2. Secondary flows', () => {
       const beforeCount = await page.locator('[data-testid="queue-row"]').count();
 
       // Apply the "Incomplete HTS" (INVALID_HTS_CODE) exception-type filter.
-      await page.getByLabel('Incomplete HTS').check();
+      // Scoped by role: the applied-filter chip's remove button carries the same
+      // accessible name, so a bare getByLabel is ambiguous once the chip renders.
+      await page.getByRole('checkbox', { name: 'Incomplete HTS' }).check();
       await expect(page.locator('[data-testid="queue-applied-filters"]')).toBeVisible();
       await expect(page.locator('[data-testid="queue-applied-filters"]')).toContainText(
         'Incomplete HTS',
@@ -325,7 +327,8 @@ test.describe('2. Secondary flows', () => {
       await expect(page.locator(`[data-testid="queue-row-${CLEAN}"]`)).toHaveCount(0);
 
       await page.locator('[data-testid="queue-filter-status"]').waitFor();
-      await page.getByLabel('Clean entries').check();
+      // Scoped by role — see the note above.
+      await page.getByRole('checkbox', { name: 'Clean entries' }).check();
       await expect(page.locator(`[data-testid="queue-row-${CLEAN}"]`)).toBeVisible();
     });
   });

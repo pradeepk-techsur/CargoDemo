@@ -26,11 +26,33 @@ import { ValidationResultsPanel } from './ValidationResultsPanel';
 import { ActionPanel } from './ActionPanel';
 import styles from './Review.module.css';
 
+/**
+ * Rendered as a USWDS breadcrumb rather than a bare link: the review screen is
+ * one level below the queue, and the breadcrumb states that relationship instead
+ * of leaving an arrow glyph to imply it. The `back-to-queue` test id stays on the
+ * anchor, which is still the only route out.
+ */
 function BackLink(): JSX.Element {
   return (
-    <Link to={QUEUE_PATH} className={styles.backLink} data-testid="back-to-queue">
-      ← Back to queue
-    </Link>
+    <nav className={`usa-breadcrumb ${styles.breadcrumb}`} aria-label="Breadcrumb">
+      <ol className="usa-breadcrumb__list">
+        <li className="usa-breadcrumb__list-item">
+          <Link
+            to={QUEUE_PATH}
+            className="usa-breadcrumb__link"
+            data-testid="back-to-queue"
+          >
+            <span>Cargo Exception Queue</span>
+          </Link>
+        </li>
+        <li
+          className="usa-breadcrumb__list-item usa-current"
+          aria-current="page"
+        >
+          <span>Shipment Review</span>
+        </li>
+      </ol>
+    </nav>
   );
 }
 
@@ -96,16 +118,26 @@ export function ReviewScreen(): JSX.Element {
         <BackLink />
         <h1 data-testid="review-shipment-id">Shipment Review — {s.shipment_id}</h1>
         <div className={styles.caseHeaderMeta}>
-          <span>{s.importer_name}</span>
+          <span className={styles.metaImporter}>{s.importer_name}</span>
           <StatusBadge status={s.case.status} testId="review-status" />
+          {/* The indicator is the compact label here; the derivation basis gets
+              its own full-width line below rather than being squeezed into a
+              flex item, where it wrapped into an unreadable narrow column. It is
+              deliberately NOT also passed as `basis`, which would render the same
+              sentence a second time for screen readers. */}
           <span data-testid="review-priority">
-            <PriorityIndicator
-              priority={s.case.priority}
-              basis={s.case.priority_basis.map((b) => b.detail).join('; ')}
-            />
+            <PriorityIndicator priority={s.case.priority} />
           </span>
-          <span data-testid="review-value">{formatUsd(s.shipment_value_usd)}</span>
+          <span className={styles.metaValue} data-testid="review-value">
+            {formatUsd(s.shipment_value_usd)}
+          </span>
         </div>
+        {s.case.priority_basis.length > 0 ? (
+          <p className={styles.priorityBasisLine}>
+            <span className={styles.priorityBasisLabel}>Priority basis</span>{' '}
+            {s.case.priority_basis.map((b) => b.detail).join('; ')}
+          </p>
+        ) : null}
       </header>
 
       <div className={styles.layout}>

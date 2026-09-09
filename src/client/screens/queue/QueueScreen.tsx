@@ -193,7 +193,7 @@ export function QueueScreen(): JSX.Element {
           <p>
             <button
               type="button"
-              className={styles.clearAll}
+              className={`usa-button usa-button--outline ${styles.clearAll}`}
               data-testid="queue-clear-filters"
               onClick={clearAll}
             >
@@ -211,7 +211,7 @@ export function QueueScreen(): JSX.Element {
         action={
           <button
             type="button"
-            className={styles.clearAll}
+            className={`usa-button usa-button--outline ${styles.clearAll}`}
             data-testid="queue-clear-filters"
             onClick={clearAll}
           >
@@ -232,6 +232,12 @@ export function QueueScreen(): JSX.Element {
         {/* The seven mandated columns have a floor width; below it the region
             scrolls horizontally rather than crushing cells into each other.
             Focusable and labelled so keyboard users can reach the scroll. */}
+        {/* Deliberately NOT `usa-table-container--scrollable`: that component sets
+            `white-space: nowrap` on every cell so columns keep their natural
+            width and the container scrolls. This table is the opposite design —
+            fixed percentage columns whose importer names, chip stacks and status
+            pills must WRAP inside their cell. Applying it made text overflow the
+            cells and paint across neighbouring columns. */}
         <div
           className={styles.tableScroll}
           role="region"
@@ -244,10 +250,17 @@ export function QueueScreen(): JSX.Element {
             sortDirection={sortDirection}
           />
         </div>
-        <div className={styles.pagination}>
+        {/* USWDS pagination. The standard component links numbered pages; this
+            queue paginates by relative step, so the two controls are buttons —
+            they change client state and produce no navigable URL of their own —
+            styled as USWDS outline buttons inside the `usa-pagination` nav. */}
+        <nav
+          className={`usa-pagination ${styles.pagination}`}
+          aria-label="Queue pagination"
+        >
           <button
             type="button"
-            className={styles.pageButton}
+            className="usa-button usa-button--outline"
             disabled={page.page <= 1}
             onClick={() =>
               update((p) => p.set('page', String(Math.max(1, page.page - 1))))
@@ -255,18 +268,18 @@ export function QueueScreen(): JSX.Element {
           >
             Previous
           </button>
-          <span>
+          <span className={styles.pageStatus}>
             Page {page.page} of {page.total_pages}
           </span>
           <button
             type="button"
-            className={styles.pageButton}
+            className="usa-button usa-button--outline"
             disabled={page.page >= page.total_pages}
             onClick={() => update((p) => p.set('page', String(page.page + 1)))}
           >
             Next
           </button>
-        </div>
+        </nav>
       </div>
     );
   } else {

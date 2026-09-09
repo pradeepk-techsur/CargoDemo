@@ -1,53 +1,118 @@
 /*
- * Design tokens + global baseline.
+ * USWDS import, token bridge, and global baseline.
  *
- * WCAG 2.1 AA: body text >= 4.5:1 on its surface, borders and focus rings >= 3:1,
- * and disabled-control reason text ALSO >= 4.5:1 — the reason is information, not
- * decoration. A visible focus ring on every focusable element, including table
- * rows. Layout sizes from container width and %/rem, never viewport units,
- * because the app renders inside an iframe of unknown size.
+ * ── Why USWDS is imported into a CASCADE LAYER ──────────────────────────────
+ * Vite emits bundled CSS in module-evaluation order, which puts the components'
+ * CSS-module files FIRST — before anything the entry module imports. USWDS would
+ * therefore land after every `*.module.css` and win every single-class conflict
+ * (`.usa-tag` beating `.chip`, `.usa-table td` beating `.row td`, and so on),
+ * making component styling silently unenforceable.
+ *
+ * `layer(uswds)` fixes that by cascade order instead of by source order or
+ * specificity: unlayered styles always outrank layered ones, so every rule in
+ * this file and in every CSS module reliably overrides USWDS no matter where the
+ * bundler places it. Do not convert this back to a plain `@import` or to a JS
+ * `import` in main.tsx — that reintroduces the ordering dependency.
+ *
+ * Vite resolves the `url()` references inside the layered import as usual, so the
+ * fonts and icon assets are still fingerprinted and emitted.
+ */
+
+@layer uswds;
+@import '@uswds/uswds/css/uswds.min.css' layer(uswds);
+
+/*
+ * USWDS token bridge + global baseline.
+ *
+ * The U.S. Web Design System (@uswds/uswds 3.14.0) compiled stylesheet is
+ * imported ahead of this file in main.tsx and owns the visual language:
+ * typography (Source Sans Pro Web / Roboto Mono Web), the colour palette, the
+ * spacing scale and every `usa-*` component class.
+ *
+ * This file does two jobs and nothing else:
+ *
+ *   1. TOKEN BRIDGE — the custom properties below keep their original names but
+ *      now resolve to USWDS design-token values. Every CSS module in the app
+ *      consumes these names, so the whole surface adopts USWDS colour and
+ *      spacing without each module having to be rewritten. The USWDS compiled
+ *      CSS carries literal values, not custom properties, so this indirection is
+ *      the only place the two systems meet. Change a token here, not in a module.
+ *
+ *   2. BASELINE + OVERRIDES — the handful of global rules the app needs on top of
+ *      USWDS, plus the two USWDS `body` declarations that have to be neutralised
+ *      (documented at the rule).
+ *
+ * Accessibility invariants preserved from the pre-USWDS design, because USWDS
+ * conformance does not by itself guarantee them at these specific pairings:
+ * body text >= 4.5:1 on its surface, borders and focus rings >= 3:1, and
+ * disabled-control reason text ALSO >= 4.5:1 (the reason is information, not
+ * decoration). A visible focus ring on every focusable element, table rows
+ * included. Layout sizes derive from container width and %/rem, never viewport
+ * units, because the app renders inside an iframe of unknown size.
  */
 
 :root {
-  /* Surfaces */
+  /* --- Surfaces (USWDS base-lightest / white) --- */
   --surface: #ffffff;
-  --surface-sunken: #f4f6f8;
+  --surface-sunken: #f0f0f0; /* base-lightest */
   --surface-raised: #ffffff;
 
-  /* Text — all >= 4.5:1 on --surface */
-  --text: #16202c;
-  --text-muted: #475467; /* 7.0:1 on white — used for reason text too */
+  /* --- Text — all >= 4.5:1 on --surface --- */
+  --text: #1b1b1b; /* base-darkest / ink — 16.9:1 */
+  --text-muted: #565c65; /* base-dark — 7.2:1, safe for reason text */
   --text-inverse: #ffffff;
 
-  /* Borders / lines — >= 3:1 */
-  --border: #c4ccd6;
-  --border-strong: #7d8895;
+  /* --- Borders / lines --- */
+  --border: #dfe1e2; /* base-lighter — hairline dividers only, never a control edge */
+  --border-strong: #71767a; /* base — 4.4:1, every interactive control edge */
 
-  /* Focus ring */
-  --focus-ring: #1554b4;
+  /* --- Focus ring (USWDS blue-40v) --- */
+  --focus-ring: #2491ff;
 
-  /* Status accents (shape/label always accompany colour) */
-  --accent: #1554b4;
-  --danger: #a8200d;
-  --warn: #8a5a00;
-  --ok: #1c6b3c;
+  /* --- Status accents. Colour NEVER carries meaning alone: every use is
+         accompanied by a text label and a distinct shape or glyph. --- */
+  --accent: #005ea2; /* primary */
+  --accent-dark: #1a4480; /* primary-dark — hover */
+  --accent-darker: #162e51; /* primary-darker — active */
+  --danger: #b50909; /* error-dark — 6.4:1 as text on white */
+  --warn: #936f38; /* warning-darker — 4.6:1 as text on white */
+  --ok: #216e1f; /* success-darker — 5.6:1 as text on white */
 
-  /* Authorship bands */
-  --band-system-border: #c4ccd6;
-  --band-human-border: #1554b4;
-  --band-human-surface: #f5f8fe;
+  /* Tinted surfaces for the alert-style blocks (USWDS *-lighter). */
+  --danger-surface: #f4e3db;
+  --warn-surface: #faf3d1;
+  --ok-surface: #ecf3ec;
+  --info-surface: #e7f6f8;
 
-  /* Spacing / radius */
-  --sp-1: 0.25rem;
-  --sp-2: 0.5rem;
-  --sp-3: 0.75rem;
-  --sp-4: 1rem;
-  --sp-5: 1.5rem;
-  --sp-6: 2rem;
-  --radius: 6px;
+  /* USWDS `warning` — a FILL, for a block that must carry dark text at AA
+     (10.4:1 against --text). Distinct from --warn above, which is
+     `warning-darker` and is only ever a text colour on a light surface: using
+     that as a fill yields 3.8:1 and fails. */
+  --warn-fill: #ffbe2e;
 
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+  /* --- Authorship bands: system finding vs. human decision --- */
+  --band-system-border: #dfe1e2;
+  --band-human-border: #005ea2;
+  --band-human-surface: #e7f6f8;
+
+  /* --- Spacing, mapped to the USWDS spacing units --- */
+  --sp-1: 0.25rem; /* units 1 */
+  --sp-2: 0.5rem; /* units 1 */
+  --sp-3: 0.75rem; /* units 1.5 */
+  --sp-4: 1rem; /* units 2 */
+  --sp-5: 1.5rem; /* units 3 */
+  --sp-6: 2rem; /* units 4 */
+  --radius: 0.25rem; /* USWDS radius-md */
+
+  /* --- Type stacks: the USWDS families, with the same fallbacks USWDS ships --- */
+  --font-body: 'Source Sans Pro Web', 'Helvetica Neue', Helvetica, Roboto, Arial,
+    sans-serif;
+  --font-mono: 'Roboto Mono Web', 'Bitstream Vera Sans Mono', Consolas, Courier,
+    monospace;
+
+  /* Header sizing, shared by the shell and its logo lockup. */
+  --shell-max-width: 1920px;
+  --logo-height: 3rem;
 }
 
 * {
@@ -58,54 +123,179 @@ html,
 body {
   margin: 0;
   padding: 0;
+  /* Establishes the percentage chain html -> body -> #root -> .shell so the
+     shell can be at least a full screen tall and its footer sits at the bottom
+     on a short page (the not-found, an empty queue) instead of floating in the
+     middle. Done with percentages rather than `vh` because the app renders
+     inside a preview iframe of unknown size. */
+  height: 100%;
 }
 
 body {
   font-family: var(--font-body);
   color: var(--text);
-  background: var(--surface-sunken);
   line-height: 1.5;
-  font-size: 16px;
+  font-size: 1rem;
+
+  /* USWDS sets `background-color: #fff`; the app distinguishes the page ground
+     from the white panels that sit on it. */
+  background: var(--surface-sunken);
+
+  /* USWDS sets `overflow-x: hidden` on body. That makes body a scroll container,
+     which breaks `position: sticky` on the review screen's case header. The app
+     confines horizontal overflow to the table's own scroll region instead, so
+     nothing here needs clipping at the body level. */
+  overflow-x: visible;
 }
 
+/* A flex column so the shell can STRETCH to fill a short page. `min-height: 100%`
+   on the shell itself cannot do this: a percentage min-height resolves against
+   the parent's height, and #root's height is auto. Making #root the flex
+   container and the shell a growing flex item resolves it deterministically. */
 #root {
   min-height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+/* The scroll container is the document, not any inner element, so a tall page
+   still scrolls normally with the height chain above in place. */
+body {
+  overflow-y: auto;
+}
+
+/*
+ * USWDS owns the heading type scale; only the vertical rhythm is set here.
+ *
+ * LONGHAND, deliberately. `margin: 0 0 X 0` also sets margin-left/right to 0,
+ * and because this file is unlayered it outranks every USWDS rule regardless of
+ * specificity — including `.usa-alert--success .usa-alert__body > *
+ * { margin-left: 2.5rem }`, which is what clears the alert's status icon. The
+ * shorthand silently pulled alert headings back under their own icon. Anything
+ * global in this file must set only the properties it actually means to own.
+ */
 h1,
 h2,
 h3 {
   line-height: 1.25;
-  margin: 0 0 var(--sp-3) 0;
+  margin-top: 0;
+  margin-bottom: var(--sp-3);
 }
 
-a {
+/*
+ * The next two rules are scoped away from `usa-button` for the same reason: as
+ * unlayered element selectors they would otherwise beat the component.
+ *
+ *  - `a { color }` would repaint an anchor styled as a solid USWDS button with
+ *    link-blue text on a blue fill — invisible.
+ *  - `button { font: inherit }` is a shorthand that resets font-weight and
+ *    font-size, stripping `usa-button`'s 700 weight and 1.06rem size.
+ *
+ * Both still apply to any element that is NOT a USWDS button, which is the case
+ * they exist for.
+ */
+a:not([class*='usa-button']) {
   color: var(--accent);
 }
 
-button {
+button:not([class*='usa-button']) {
   font: inherit;
 }
 
-/* Visible focus ring on EVERY focusable element, rows included. */
+/* A visible focus ring on EVERY focusable element, table rows included. USWDS
+   applies its ring through `.usa-focus` and per-component selectors; this makes
+   it unconditional so a custom control can never ship without one. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
+summary:focus-visible,
 [tabindex]:focus-visible {
-  outline: 3px solid var(--focus-ring);
-  outline-offset: 2px;
+  outline: 0.25rem solid var(--focus-ring);
+  outline-offset: 0;
 }
+
+/* --- USWDS alert: keep an action button at its natural width -------------- */
+/*
+ * `.usa-alert__body` is a flex column, so its default `align-items: stretch`
+ * combines with `usa-button`'s `width: 100%` to stretch an in-alert action
+ * (EmptyState's "Clear all filters", ErrorPanel's "Retry") across the whole
+ * alert. Buttons size to their label.
+ */
+.usa-alert__body > .usa-button {
+  align-self: flex-start;
+  width: auto;
+}
+
+/* --- USWDS checkbox / radio: keep the input hit-testable ------------------- */
+/*
+ * USWDS hides the native input with `position: absolute; left: -999em` and draws
+ * the visible control with the adjacent label's `::before`. The control stays
+ * fully accessible that way — the input is still focusable and still announced —
+ * but it is parked ~16000px off-screen, so it cannot be CLICKED or scrolled into
+ * view. Anything driving the control by pointer (including the acceptance suite,
+ * which checks these inputs directly) fails against it.
+ *
+ * These rules move the input back on-screen and lay it invisibly OVER the control
+ * USWDS draws, matching that box exactly: 1.25rem square, offset by the label's
+ * own `margin-top` plus the `::before` offsets (`left: 0` + `margin-left: 2px`,
+ * `margin-top: .064rem`). Appearance is untouched — `opacity: 0` means USWDS's
+ * `::before` remains the only thing seen — while the real control becomes the hit
+ * target at the position the user is already aiming at. Clicking the label still
+ * works through normal label association.
+ *
+ * The offsets track USWDS's geometry, so do not override the label's `margin-top`
+ * on these components without adjusting `top` to match.
+ */
+
+.usa-checkbox,
+.usa-radio {
+  position: relative;
+}
+
+.usa-checkbox__input,
+.usa-radio__input {
+  position: absolute;
+  left: 2px; /* ::before left: 0 + margin-left: 2px */
+  top: calc(0.75rem + 0.064rem); /* label margin-top + ::before margin-top */
+  width: 1.25rem;
+  height: 1.25rem;
+  right: auto;
+  margin: 0;
+  opacity: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+/* The tile variant indents its control and pads the label, so the box sits lower
+   and further right: label margin-top .5rem + padding-top .75rem, ::before at
+   left .5rem. */
+.usa-checkbox__input--tile,
+.usa-radio__input--tile {
+  left: calc(0.5rem + 2px);
+  top: calc(0.5rem + 0.75rem + 0.064rem);
+}
+
+.usa-checkbox__input:disabled,
+.usa-radio__input:disabled {
+  cursor: not-allowed;
+}
+
+/* --- Application shell ---------------------------------------------------- */
 
 .app-shell {
   width: 100%;
-  max-width: 1920px;
+  max-width: var(--shell-max-width);
   margin: 0 auto;
   padding: var(--sp-5);
 }
 
+/* --- Utilities ------------------------------------------------------------ */
+
+/* Retained under its own name because app markup and the E2E suite reference it;
+   equivalent to USWDS `.usa-sr-only`. */
 .visually-hidden {
   position: absolute;
   width: 1px;
