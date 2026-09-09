@@ -1,14 +1,14 @@
 /**
  * The application shell: USWDS government banner, the branded header, and the
- * identifier footer. Every route renders inside it, so the DHS CBP / Cargo
- * Directorate lockup is present on the queue, the review screen, and the
- * not-found page alike.
+ * identifier footer. Every route renders inside it, so the agency lockup is
+ * present on the queue, the review screen, and the not-found page alike.
  *
  * The lockup sits at the top-left per the USWDS header standard, and is a link
- * home — the conventional behaviour for an agency mark. The two marks are
- * `alt=""` because the adjacent wordmark already carries the agency name as text:
- * giving them alt text would announce the same organisation three times. See
- * public/branding/README.md for swapping in the authorised artwork.
+ * home — the conventional behaviour for an agency mark. It is a SINGLE mark
+ * beside the wordmark text. The mark is `alt=""` because that adjacent wordmark
+ * already carries the agency name as text; giving the image alt text would
+ * announce the same organisation twice. See public/branding/README.md for
+ * swapping in the authorised artwork.
  *
  * The shell renders NO navigation. The app has exactly two routes and the review
  * screen is reachable only by activating a queue row, so a nav bar would be an
@@ -24,20 +24,15 @@ import { GovBanner } from './GovBanner';
 import styles from './AppShell.module.css';
 
 /**
- * Served from Vite's publicDir (src/client/public), so these are verbatim,
- * un-fingerprinted paths: replacing the file on disk swaps the mark with no code
- * change. Change the extension here if the authorised artwork is not SVG.
+ * The one header mark. Served from Vite's publicDir (src/client/public), so this
+ * is a verbatim, un-fingerprinted path: replacing the file on disk swaps the
+ * artwork with no code change and no rebuild reference to update.
+ *
+ * This is the ONLY place the filename appears — change it here if the artwork is
+ * not an SVG (the extension determines the served Content-Type, so a PNG must be
+ * named `.png`).
  */
-const LOGOS = {
-  agency: {
-    src: '/branding/dhs-cbp.svg',
-    testId: 'logo-dhs-cbp',
-  },
-  directorate: {
-    src: '/branding/cargo-directorate.svg',
-    testId: 'logo-cargo-directorate',
-  },
-} as const;
+const AGENCY_LOGO_SRC = '/branding/agency-logo.svg';
 
 export function AppShell(props: { children: ReactNode }): JSX.Element {
   return (
@@ -56,20 +51,12 @@ export function AppShell(props: { children: ReactNode }): JSX.Element {
         <div className={styles.headerInner}>
           <div className={`usa-logo ${styles.logo}`}>
             <Link to={QUEUE_PATH} className={styles.lockup} data-testid="header-home-link">
-              <span className={styles.marks}>
-                <img
-                  className={styles.mark}
-                  src={LOGOS.agency.src}
-                  alt=""
-                  data-testid={LOGOS.agency.testId}
-                />
-                <img
-                  className={styles.mark}
-                  src={LOGOS.directorate.src}
-                  alt=""
-                  data-testid={LOGOS.directorate.testId}
-                />
-              </span>
+              <img
+                className={styles.mark}
+                src={AGENCY_LOGO_SRC}
+                alt=""
+                data-testid="header-logo"
+              />
               <span className={styles.wordmark}>
                 <span className={styles.agencyName}>
                   U.S. Customs and Border Protection

@@ -1,43 +1,51 @@
-# Branding assets — header logo lockup
+# Branding assets — header logo
 
-The application header (`src/client/components/AppShell.tsx`) renders two marks in
-its top-left lockup, loaded by absolute URL from this directory:
+The application header (`src/client/components/AppShell.tsx`) renders **one** mark
+in its top-left lockup, loaded by absolute URL from this directory:
 
-| File                      | Served at                        | Slot in the lockup |
-| ------------------------- | -------------------------------- | ------------------ |
-| `dhs-cbp.svg`             | `/branding/dhs-cbp.svg`          | Primary — DHS / U.S. Customs and Border Protection |
-| `cargo-directorate.svg`   | `/branding/cargo-directorate.svg`| Secondary — CBP Cargo Directorate |
+| File               | Served at                | Slot                                    |
+| ------------------ | ------------------------ | --------------------------------------- |
+| `agency-logo.svg`  | `/branding/agency-logo.svg` | The single mark, left of the wordmark |
 
-## Both files are currently PLACEHOLDERS
+Beside it, the header renders the wordmark as **text** — "U.S. Customs and Border
+Protection" over "Cargo Directorate". The mark therefore carries `alt=""`: it is
+decorative in the accessibility tree because the adjacent text already names the
+organisation, and giving the image alt text would announce it twice. If you
+replace it with artwork conveying something that text does not say, give it a real
+`alt` in `AppShell.tsx`.
 
-They are generic institutional marks authored for this repository. They do **not**
-reproduce the official DHS or CBP seals, which are protected insignia (18 U.S.C.
-§ 701) and must be obtained from, and used with the authorisation of, the agency.
+## The current file is an INTERIM STAND-IN
 
-## Replacing them with the real artwork
+`agency-logo.svg` is a plain, self-labelling placeholder ("LOGO / pending"). It is
+not branding. It exists so the header renders a valid image rather than a
+broken-image icon while the real artwork is outstanding.
 
-Drop the authorised files in this directory **using the exact filenames above**.
-No code change and no reference update is required.
+## Replacing it
 
-- **Format:** SVG is strongly preferred (the header scales the mark and SVG stays
-  crisp on any display). PNG works if you also keep the filename — change the
-  extension in `LOGOS` in `AppShell.tsx` if you do.
-- **Aspect ratio:** the lockup sizes each mark to a fixed height
-  (`--logo-height`, 3rem) with `width: auto`, so any aspect ratio renders without
-  distortion. Roughly square marks suit the layout best.
+Drop the artwork in this directory as **`agency-logo.svg`**. No code change and no
+reference update is required.
+
+- **Format:** SVG is strongly preferred — the header scales the mark, and SVG
+  stays crisp at any display density. PNG works, but the file extension
+  determines the served `Content-Type`, so a PNG must be named `agency-logo.png`
+  and `AGENCY_LOGO_SRC` in `AppShell.tsx` updated to match. That constant is the
+  only place the filename appears.
+- **Size / aspect ratio:** nothing to configure. The header sets a fixed height
+  (`--logo-height`, `3rem`) with `width: auto`, so a square seal and a wide
+  horizontal lockup both render 3rem tall, undistorted. Change `--logo-height` in
+  `src/client/styles/app.css` to resize — it is the single source of that value.
 - **Padding:** ship the artwork trimmed to its own edges; the lockup supplies its
   own spacing.
-- **Contrast:** the marks sit on a white header surface. Artwork with a white
-  knockout background will disappear — use a transparent background.
+- **Background:** the mark sits on a white header surface. Use a transparent
+  background — artwork with a white knockout will disappear into it.
 
-This directory is Vite's `publicDir`, so its contents are copied verbatim into
-`dist/client/` at build time and are never hashed, renamed, or inlined. Swapping a
-file here is a file replacement, not a rebuild dependency.
+## Why this directory
 
-## Accessibility
+It is Vite's `publicDir`, so its contents are copied verbatim into `dist/client/`
+at build time and are never hashed, renamed, or inlined. Swapping a file here is a
+file replacement, not a rebuild dependency.
 
-The marks are decorative in the accessibility tree: the header's accessible name
-comes from the adjacent agency wordmark text ("U.S. Customs and Border
-Protection / Cargo Directorate"), so the images carry `alt=""` and are not
-announced twice. If you replace a mark with one carrying information not present
-in that text, give it a real `alt` in `AppShell.tsx`.
+## Note on official insignia
+
+The DHS and CBP seals are protected insignia (18 U.S.C. § 701). Obtain the artwork
+from, and use it with the authorisation of, the agency.

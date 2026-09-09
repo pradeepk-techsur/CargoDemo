@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  INTERIM STAND-IN — replace this file with the supplied logo artwork.
+
+  It is deliberately plain and self-labelling so it cannot be mistaken for real
+  branding or shipped by accident. It exists only so the header renders a valid
+  image instead of a broken-image icon while the artwork is outstanding.
+
+  Replace with the same filename (agency-logo.svg). If the artwork is a PNG,
+  name it agency-logo.png and update AGENCY_LOGO_SRC in
+  src/client/components/AppShell.tsx. Sizing needs no change: the header renders
+  the mark at 3rem tall with automatic width, at any aspect ratio.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-hidden="true" focusable="false">
+  <rect x="2" y="2" width="92" height="92" rx="6" fill="#f0f0f0" stroke="#71767a" stroke-width="2" stroke-dasharray="6 4" />
+  <text x="48" y="45" text-anchor="middle" font-family="'Source Sans Pro Web', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#565c65">LOGO</text>
+  <text x="48" y="63" text-anchor="middle" font-family="'Source Sans Pro Web', Helvetica, Arial, sans-serif" font-size="11" fill="#565c65">pending</text>
+</svg>

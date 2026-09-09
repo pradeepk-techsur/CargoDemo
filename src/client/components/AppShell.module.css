@@ -52,18 +52,21 @@
   text-decoration: underline;
 }
 
-.marks {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  flex: 0 0 auto;
-}
-
-/* Fixed height, automatic width: any aspect ratio of replacement artwork renders
-   undistorted. */
+/*
+ * The single header mark.
+ *
+ * Fixed HEIGHT with automatic width, so artwork of any aspect ratio renders at
+ * the same optical size and is never squashed: a tall square seal and a wide
+ * horizontal lockup both come out 3rem tall. `--logo-height` (app.css) is the
+ * one place that size is set.
+ *
+ * `flex: 0 0 auto` stops the mark being compressed when the wordmark beside it
+ * is long and the header runs short of room — the wordmark wraps instead.
+ */
 .mark {
   height: var(--logo-height);
   width: auto;
+  flex: 0 0 auto;
   display: block;
 }
 
